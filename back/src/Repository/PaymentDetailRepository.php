@@ -2,25 +2,25 @@
 
 namespace App\Repository;
 
-use App\Entity\PaymentDetails;
+use App\Entity\PaymentDetail;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @method PaymentDetails|null find($id, $lockMode = null, $lockVersion = null)
- * @method PaymentDetails|null findOneBy(array $criteria, array $orderBy = null)
- * @method PaymentDetails[]    findAll()
- * @method PaymentDetails[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method PaymentDetail|null find($id, $lockMode = null, $lockVersion = null)
+ * @method PaymentDetail|null findOneBy(array $criteria, array $orderBy = null)
+ * @method PaymentDetail[]    findAll()
+ * @method PaymentDetail[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class PaymentDetailsRepository extends ServiceEntityRepository
+class PaymentDetailRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, PaymentDetails::class);
+        parent::__construct($registry, PaymentDetail::class);
     }
 
     // /**
-    //  * @return PaymentDetails[] Returns an array of PaymentDetails objects
+    //  * @return PaymentDetail[] Returns an array of PaymentDetail objects
     //  */
     /*
     public function findByExampleField($value)
@@ -37,7 +37,7 @@ class PaymentDetailsRepository extends ServiceEntityRepository
     */
 
     /*
-    public function findOneBySomeField($value): ?PaymentDetails
+    public function findOneBySomeField($value): ?PaymentDetail
     {
         return $this->createQueryBuilder('p')
             ->andWhere('p.exampleField = :val')

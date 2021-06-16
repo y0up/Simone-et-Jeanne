@@ -2,15 +2,15 @@
 
 namespace App\Entity;
 
-use App\Repository\ShoppingSessionRepository;
+use App\Repository\OrderDetailRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass=ShoppingSessionRepository::class)
+ * @ORM\Entity(repositoryClass=OrderDetailRepository::class)
  */
-class ShoppingSession
+class OrderDetail
 {
     /**
      * @ORM\Id
@@ -35,18 +35,18 @@ class ShoppingSession
     private $updatedAt;
 
     /**
-     * @ORM\OneToOne(targetEntity=User::class, cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity=PaymentDetail::class, inversedBy="orderDetail", cascade={"persist", "remove"})
      */
-    private $user;
+    private $PaymentDetail;
 
     /**
-     * @ORM\OneToMany(targetEntity=CartItem::class, mappedBy="shoppingSession")
+     * @ORM\OneToMany(targetEntity=OrderItem::class, mappedBy="orderDetail")
      */
-    private $cartItems;
+    private $orderItems;
 
     public function __construct()
     {
-        $this->cartItems = new ArrayCollection();
+        $this->orderItems = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -90,42 +90,42 @@ class ShoppingSession
         return $this;
     }
 
-    public function getUser(): ?User
+    public function getPaymentDetail(): ?PaymentDetail
     {
-        return $this->user;
+        return $this->PaymentDetail;
     }
 
-    public function setUser(?User $user): self
+    public function setPaymentDetail(?PaymentDetail $PaymentDetail): self
     {
-        $this->user = $user;
+        $this->PaymentDetail = $PaymentDetail;
 
         return $this;
     }
 
     /**
-     * @return Collection|CartItem[]
+     * @return Collection|OrderItem[]
      */
-    public function getCartItems(): Collection
+    public function getOrderItems(): Collection
     {
-        return $this->cartItems;
+        return $this->orderItems;
     }
 
-    public function addCartItem(CartItem $cartItem): self
+    public function addOrderItem(OrderItem $orderItem): self
     {
-        if (!$this->cartItems->contains($cartItem)) {
-            $this->cartItems[] = $cartItem;
-            $cartItem->setShoppingSession($this);
+        if (!$this->orderItems->contains($orderItem)) {
+            $this->orderItems[] = $orderItem;
+            $orderItem->setOrderDetail($this);
         }
 
         return $this;
     }
 
-    public function removeCartItem(CartItem $cartItem): self
+    public function removeOrderItem(OrderItem $orderItem): self
     {
-        if ($this->cartItems->removeElement($cartItem)) {
+        if ($this->orderItems->removeElement($orderItem)) {
             // set the owning side to null (unless already changed)
-            if ($cartItem->getShoppingSession() === $this) {
-                $cartItem->setShoppingSession(null);
+            if ($orderItem->getOrderDetail() === $this) {
+                $orderItem->setOrderDetail(null);
             }
         }
 

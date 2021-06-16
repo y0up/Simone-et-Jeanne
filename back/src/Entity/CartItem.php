@@ -32,6 +32,16 @@ class CartItem
      */
     private $updatedAt;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=ShoppingSession::class, inversedBy="cartItems")
+     */
+    private $shoppingSession;
+
+    /**
+     * @ORM\OneToOne(targetEntity=Product::class, cascade={"persist", "remove"})
+     */
+    private $product;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -69,6 +79,30 @@ class CartItem
     public function setUpdatedAt(?\DateTimeInterface $updatedAt): self
     {
         $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    public function getShoppingSession(): ?ShoppingSession
+    {
+        return $this->shoppingSession;
+    }
+
+    public function setShoppingSession(?ShoppingSession $shoppingSession): self
+    {
+        $this->shoppingSession = $shoppingSession;
+
+        return $this;
+    }
+
+    public function getProduct(): ?Product
+    {
+        return $this->product;
+    }
+
+    public function setProduct(?Product $product): self
+    {
+        $this->product = $product;
 
         return $this;
     }

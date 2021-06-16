@@ -2,13 +2,13 @@
 
 namespace App\Entity;
 
-use App\Repository\OrderItemsRepository;
+use App\Repository\OrderItemRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass=OrderItemsRepository::class)
+ * @ORM\Entity(repositoryClass=OrderItemRepository::class)
  */
-class OrderItems
+class OrderItem
 {
     /**
      * @ORM\Id
@@ -31,6 +31,16 @@ class OrderItems
      * @ORM\Column(type="datetime", nullable=true)
      */
     private $updatedAt;
+
+    /**
+     * @ORM\OneToOne(targetEntity=Product::class, inversedBy="orderItem", cascade={"persist", "remove"})
+     */
+    private $product;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=OrderDetail::class, inversedBy="orderItems")
+     */
+    private $orderDetail;
 
     public function getId(): ?int
     {
@@ -69,6 +79,30 @@ class OrderItems
     public function setUpdatedAt(?\DateTimeInterface $updatedAt): self
     {
         $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    public function getProduct(): ?Product
+    {
+        return $this->product;
+    }
+
+    public function setProduct(?Product $product): self
+    {
+        $this->product = $product;
+
+        return $this;
+    }
+
+    public function getOrderDetail(): ?OrderDetail
+    {
+        return $this->orderDetail;
+    }
+
+    public function setOrderDetail(?OrderDetail $orderDetail): self
+    {
+        $this->orderDetail = $orderDetail;
 
         return $this;
     }

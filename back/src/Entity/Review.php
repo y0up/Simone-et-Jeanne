@@ -2,13 +2,13 @@
 
 namespace App\Entity;
 
-use App\Repository\ReviewsRepository;
+use App\Repository\ReviewRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass=ReviewsRepository::class)
+ * @ORM\Entity(repositoryClass=ReviewRepository::class)
  */
-class Reviews
+class Review
 {
     /**
      * @ORM\Id
@@ -41,6 +41,16 @@ class Reviews
      * @ORM\Column(type="datetime", nullable=true)
      */
     private $deletedAt;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="reviews")
+     */
+    private $user;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Product::class, inversedBy="reviews")
+     */
+    private $product;
 
     public function getId(): ?int
     {
@@ -103,6 +113,30 @@ class Reviews
     public function setDeletedAt(?\DateTimeInterface $deletedAt): self
     {
         $this->deletedAt = $deletedAt;
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): self
+    {
+        $this->user = $user;
+
+        return $this;
+    }
+
+    public function getProduct(): ?Product
+    {
+        return $this->product;
+    }
+
+    public function setProduct(?Product $product): self
+    {
+        $this->product = $product;
 
         return $this;
     }

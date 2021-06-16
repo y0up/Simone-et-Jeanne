@@ -37,6 +37,11 @@ class CaracteristicDetail
      */
     private $updatedAt;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=Caracteristic::class, inversedBy="caracteristicDetail")
+     */
+    private $caracteristic;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -86,6 +91,18 @@ class CaracteristicDetail
     public function setUpdatedAt(?\DateTimeInterface $updatedAt): self
     {
         $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    public function getCaracteristic(): ?Caracteristic
+    {
+        return $this->caracteristic;
+    }
+
+    public function setCaracteristic(?Caracteristic $caracteristic): self
+    {
+        $this->caracteristic = $caracteristic;
 
         return $this;
     }

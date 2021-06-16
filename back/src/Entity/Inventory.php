@@ -37,6 +37,11 @@ class Inventory
      */
     private $deletedAt;
 
+    /**
+     * @ORM\OneToOne(targetEntity=Product::class, mappedBy="inventory", cascade={"persist", "remove"})
+     */
+    private $product;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -86,6 +91,28 @@ class Inventory
     public function setDeletedAt(?\DateTimeInterface $deletedAt): self
     {
         $this->deletedAt = $deletedAt;
+
+        return $this;
+    }
+
+    public function getProduct(): ?Product
+    {
+        return $this->product;
+    }
+
+    public function setProduct(?Product $product): self
+    {
+        // unset the owning side of the relation if necessary
+        if ($product === null && $this->product !== null) {
+            $this->product->setInventory(null);
+        }
+
+        // set the owning side of the relation if necessary
+        if ($product !== null && $product->getInventory() !== $this) {
+            $product->setInventory($this);
+        }
+
+        $this->product = $product;
 
         return $this;
     }
