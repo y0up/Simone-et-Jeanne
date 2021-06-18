@@ -38,9 +38,11 @@ class CartItem
     private $shoppingSession;
 
     /**
-     * @ORM\OneToOne(targetEntity=Product::class, cascade={"persist", "remove"})
+     * @ORM\ManyToOne(targetEntity=Product::class, inversedBy="cartItems")
      */
     private $product;
+
+   
 
     public function getId(): ?int
     {
@@ -106,4 +108,5 @@ class CartItem
 
         return $this;
     }
+
 }
