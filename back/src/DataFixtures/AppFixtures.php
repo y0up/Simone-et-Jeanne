@@ -38,7 +38,7 @@ class AppFixtures extends Fixture
         $categoryList = [];
         $caracteristicList = [];
         
-        $total = 0;
+      
         $randomNumber = $faker->numberBetween($min = 1, $max = 3);
 
         for ($i=0; $i < 5; $i++) { 
@@ -94,6 +94,7 @@ class AppFixtures extends Fixture
         $randomProductObject = $faker->randomElement($productList);
 
         for ($i=0; $i < 30; $i++) { 
+            $total = 0;
             $user = new User();
             $shoppingSession = new ShoppingSession();
             
