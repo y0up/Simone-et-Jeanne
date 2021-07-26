@@ -87,11 +87,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $orderDetail;
 
+    /**
+     * @ORM\ManyToMany(targetEntity=product::class, inversedBy="users")
+     */
+    private $favorite;
+
     public function __construct()
     {
         $this->adresses = new ArrayCollection();
         $this->payments = new ArrayCollection();
         $this->reviews = new ArrayCollection();
+        $this->favorite = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -353,6 +359,30 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setOrderDetail(?OrderDetail $orderDetail): self
     {
         $this->orderDetail = $orderDetail;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|product[]
+     */
+    public function getFavorite(): Collection
+    {
+        return $this->favorite;
+    }
+
+    public function addFavorite(product $favorite): self
+    {
+        if (!$this->favorite->contains($favorite)) {
+            $this->favorite[] = $favorite;
+        }
+
+        return $this;
+    }
+
+    public function removeFavorite(product $favorite): self
+    {
+        $this->favorite->removeElement($favorite);
 
         return $this;
     }

@@ -84,12 +84,23 @@ class Product
      */
     private $cartItems;
 
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $new;
+
+    /**
+     * @ORM\ManyToMany(targetEntity=User::class, mappedBy="favorite")
+     */
+    private $users;
+
     public function __construct()
     {
         $this->reviews = new ArrayCollection();
         $this->caracteristic = new ArrayCollection();
         $this->categories = new ArrayCollection();
         $this->cartItems = new ArrayCollection();
+        $this->users = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -318,6 +329,45 @@ class Product
             if ($cartItem->getProduct() === $this) {
                 $cartItem->setProduct(null);
             }
+        }
+
+        return $this;
+    }
+
+    public function getNew(): ?bool
+    {
+        return $this->new;
+    }
+
+    public function setNew(bool $new): self
+    {
+        $this->new = $new;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|User[]
+     */
+    public function getUsers(): Collection
+    {
+        return $this->users;
+    }
+
+    public function addUser(User $user): self
+    {
+        if (!$this->users->contains($user)) {
+            $this->users[] = $user;
+            $user->addFavorite($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUser(User $user): self
+    {
+        if ($this->users->removeElement($user)) {
+            $user->removeFavorite($this);
         }
 
         return $this;
