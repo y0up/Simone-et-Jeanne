@@ -44,9 +44,25 @@ class OrderDetail
      */
     private $orderItems;
 
+    /**
+     * @ORM\OneToMany(targetEntity=OrderAdress::class, mappedBy="orderDetail", orphanRemoval=true)
+     */
+    private $orderAdresses;
+
+    /**
+     * @ORM\Column(type="float")
+     */
+    private $shippingPrice;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $status;
+
     public function __construct()
     {
         $this->orderItems = new ArrayCollection();
+        $this->orderAdresses = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -128,6 +144,60 @@ class OrderDetail
                 $orderItem->setOrderDetail(null);
             }
         }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|OrderAdress[]
+     */
+    public function getOrderAdresses(): Collection
+    {
+        return $this->orderAdresses;
+    }
+
+    public function addOrderAdress(OrderAdress $orderAdress): self
+    {
+        if (!$this->orderAdresses->contains($orderAdress)) {
+            $this->orderAdresses[] = $orderAdress;
+            $orderAdress->setOrderDetail($this);
+        }
+
+        return $this;
+    }
+
+    public function removeOrderAdress(OrderAdress $orderAdress): self
+    {
+        if ($this->orderAdresses->removeElement($orderAdress)) {
+            // set the owning side to null (unless already changed)
+            if ($orderAdress->getOrderDetail() === $this) {
+                $orderAdress->setOrderDetail(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getShippingPrice(): ?string
+    {
+        return $this->shippingPrice;
+    }
+
+    public function setShippingPrice(string $shippingPrice): self
+    {
+        $this->shippingPrice = $shippingPrice;
+
+        return $this;
+    }
+
+    public function getStatus(): ?string
+    {
+        return $this->status;
+    }
+
+    public function setStatus(string $status): self
+    {
+        $this->status = $status;
 
         return $this;
     }

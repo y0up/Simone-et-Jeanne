@@ -92,6 +92,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $favorite;
 
+    /**
+     * @ORM\Column(type="date")
+     */
+    private $dateOfBirth;
+
     public function __construct()
     {
         $this->adresses = new ArrayCollection();
@@ -383,6 +388,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function removeFavorite(product $favorite): self
     {
         $this->favorite->removeElement($favorite);
+
+        return $this;
+    }
+
+    public function getDateOfBirth(): ?\DateTimeInterface
+    {
+        return $this->dateOfBirth;
+    }
+
+    public function setDateOfBirth(\DateTimeInterface $dateOfBirth): self
+    {
+        $this->dateOfBirth = $dateOfBirth;
 
         return $this;
     }

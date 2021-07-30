@@ -44,6 +44,11 @@ class ShoppingSession
      */
     private $cartItems;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=Shipping::class, inversedBy="shoppingSessions")
+     */
+    private $shipping;
+
     public function __construct()
     {
         $this->cartItems = new ArrayCollection();
@@ -128,6 +133,18 @@ class ShoppingSession
                 $cartItem->setShoppingSession(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getShipping(): ?Shipping
+    {
+        return $this->shipping;
+    }
+
+    public function setShipping(?Shipping $shipping): self
+    {
+        $this->shipping = $shipping;
 
         return $this;
     }

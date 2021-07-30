@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c4751408642d763da1db864375f701fb",
+    "content-hash": "2c75177d19a265978e9e381456d3cf2d",
     "packages": [
         {
             "name": "composer/package-versions-deprecated",
@@ -10139,7 +10139,6 @@
         "symfony/css-selector": 20,
         "symfony/debug-bundle": 20,
         "symfony/stopwatch": 20,
-        "symfony/var-dumper": 20,
         "symfony/web-profiler-bundle": 20
     },
     "prefer-stable": true,

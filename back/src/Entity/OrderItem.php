@@ -33,7 +33,7 @@ class OrderItem
     private $updatedAt;
 
     /**
-     * @ORM\OneToOne(targetEntity=Product::class, inversedBy="orderItem", cascade={"persist", "remove"})
+     * @ORM\ManyToOne(targetEntity=Product::class, inversedBy="orderItems")
      */
     private $product;
 

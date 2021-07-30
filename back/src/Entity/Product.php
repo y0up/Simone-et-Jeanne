@@ -75,9 +75,9 @@ class Product
     private $categories;
 
     /**
-     * @ORM\OneToOne(targetEntity=OrderItem::class, mappedBy="product", cascade={"persist", "remove"})
+     * @ORM\OneToMany(targetEntity=OrderItem::class, mappedBy="product")
      */
-    private $orderItem;
+    private $orderItems;
 
     /**
      * @ORM\OneToMany(targetEntity=CartItem::class, mappedBy="product")
@@ -282,16 +282,16 @@ class Product
         return $this;
     }
 
-    public function getOrderItem(): ?OrderItem
+    public function getOrderItems(): ?OrderItem
     {
-        return $this->orderItem;
+        return $this->orderItems;
     }
 
-    public function setOrderItem(?OrderItem $orderItem): self
+    public function setOrderItems(?OrderItem $orderItem): self
     {
         // unset the owning side of the relation if necessary
-        if ($orderItem === null && $this->orderItem !== null) {
-            $this->orderItem->setProduct(null);
+        if ($orderItem === null && $this->orderItems !== null) {
+            $this->orderItems->setProduct(null);
         }
 
         // set the owning side of the relation if necessary
@@ -299,7 +299,7 @@ class Product
             $orderItem->setProduct($this);
         }
 
-        $this->orderItem = $orderItem;
+        $this->orderItems = $orderItem;
 
         return $this;
     }
