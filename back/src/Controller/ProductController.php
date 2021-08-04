@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Category;
 use App\Entity\Product;
 use App\Form\ProductType;
+use App\Repository\CategoryRepository;
 use App\Repository\ProductRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -19,41 +20,44 @@ class ProductController extends AbstractController
     /**
      * @Route("/", name="product_index", methods={"GET"})
      */
-    public function index(ProductRepository $productRepository): Response
+    public function index(ProductRepository $productRepository, CategoryRepository $categoryRepository): Response
     {
+        $categories = $categoryRepository->findAll();
         return $this->render('product/index.html.twig', [
             'products' => $productRepository->findAll(),
+            'categories' => $categories,
         ]);
     }
 
-        /**
+    /**
      * @Route("/New", name="product_index_new", methods={"GET"})
      */
-    public function indexNew(ProductRepository $productRepository): Response
+    public function indexNew(ProductRepository $productRepository, CategoryRepository $categoryRepository): Response
     {
+        $categories = $categoryRepository->findAll();
+        $products = $productRepository->findBy(
+            ['new' => 'Yes']
+        );
         return $this->render('product/index.html.twig', [
-            'products' => $productRepository->findBy(
-                ['new' => 'Yes']
-            ),
+            'products' => $products,
+            'categories' => $categories,
         ]);
     }
 
-            /**
+    /**
      * @Route("/{id}", name="product_index_cat", methods={"GET"})
      */
-    public function indexCat(Category $category, ProductRepository $productRepository): Response
+    public function indexCat(Category $category, CategoryRepository $categoryRepository): Response
     {
-        if (isset($category['id'])) {
-            echo 'yes papi';
-        }
+        $categories = $categoryRepository->findAll();
 
-            return $this->render('product/index.html.twig', [
-                'products' => $productRepository->findBy(
-                    ['categories' => $category]
-                ),
-            ]);
+        return $this->render('product/index.html.twig', [
+            'products' => $category->getProducts(),
+            'categories' => $categories,
+        ]);
+    }
 
-        }
+        
 
     
 

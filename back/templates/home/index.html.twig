@@ -3,13 +3,5 @@
 {% block title %}Hello HomeController!{% endblock %}
 
 {% block body %}
-<header>
-    <h3>Acceuil</h3>
-    <a href="{{ path('product_index_new') }}">Nouveaute</a>
-    {% for category in categories %}
-    <h3>{{category.name}}</h3>
-    {% endfor %}
-    <h3>A Propos</h3>
-    <h3>Contact</h3>
-</header>
+
 {% endblock %}
