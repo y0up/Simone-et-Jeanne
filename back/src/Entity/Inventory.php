@@ -42,6 +42,11 @@ class Inventory
      */
     private $product;
 
+    public function __toString()
+    {
+        return (string) $this->quantity;
+    }
+
     public function getId(): ?int
     {
         return $this->id;
@@ -116,4 +121,5 @@ class Inventory
 
         return $this;
     }
+
 }

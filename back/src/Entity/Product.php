@@ -60,7 +60,7 @@ class Product
     private $inventory;
 
     /**
-     * @ORM\OneToMany(targetEntity=Review::class, mappedBy="product")
+     * @ORM\OneToMany(targetEntity=Review::class, mappedBy="product", orphanRemoval=true)
      */
     private $reviews;
 
@@ -75,12 +75,12 @@ class Product
     private $categories;
 
     /**
-     * @ORM\OneToMany(targetEntity=OrderItem::class, mappedBy="product")
+     * @ORM\OneToMany(targetEntity=OrderItem::class, mappedBy="product", orphanRemoval=true)
      */
     private $orderItems;
 
     /**
-     * @ORM\OneToMany(targetEntity=CartItem::class, mappedBy="product")
+     * @ORM\OneToMany(targetEntity=CartItem::class, mappedBy="product", orphanRemoval=true)
      */
     private $cartItems;
 
@@ -101,6 +101,11 @@ class Product
         $this->categories = new ArrayCollection();
         $this->cartItems = new ArrayCollection();
         $this->users = new ArrayCollection();
+    }
+
+    public function __toString()
+    {
+        return $this->getName();
     }
 
     public function getId(): ?int

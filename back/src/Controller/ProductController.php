@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Category;
 use App\Entity\Product;
 use App\Form\ProductType;
 use App\Repository\ProductRepository;
@@ -24,6 +25,37 @@ class ProductController extends AbstractController
             'products' => $productRepository->findAll(),
         ]);
     }
+
+        /**
+     * @Route("/New", name="product_index_new", methods={"GET"})
+     */
+    public function indexNew(ProductRepository $productRepository): Response
+    {
+        return $this->render('product/index.html.twig', [
+            'products' => $productRepository->findBy(
+                ['new' => 'Yes']
+            ),
+        ]);
+    }
+
+            /**
+     * @Route("/{id}", name="product_index_cat", methods={"GET"})
+     */
+    public function indexCat(Category $category, ProductRepository $productRepository): Response
+    {
+        if (isset($category['id'])) {
+            echo 'yes papi';
+        }
+
+            return $this->render('product/index.html.twig', [
+                'products' => $productRepository->findBy(
+                    ['categories' => $category]
+                ),
+            ]);
+
+        }
+
+    
 
     /**
      * @Route("/new", name="product_new", methods={"GET","POST"})

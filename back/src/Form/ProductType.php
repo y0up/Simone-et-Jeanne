@@ -16,14 +16,10 @@ class ProductType extends AbstractType
             ->add('description')
             ->add('SKU')
             ->add('price')
-            ->add('createdAt')
-            ->add('updatedAt')
-            ->add('deletedAt')
             ->add('new')
             ->add('inventory')
             ->add('caracteristic')
             ->add('categories')
-            ->add('users')
         ;
     }
 
