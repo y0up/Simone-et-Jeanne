@@ -10,26 +10,29 @@ use App\Entity\Payment;
 use App\Entity\Product;
 use App\Entity\CartItem;
 use App\Entity\Category;
+use App\Entity\Shipping;
 use App\Entity\Inventory;
 use App\Entity\OrderItem;
+use App\Entity\OrderAdress;
 use App\Entity\OrderDetail;
 use App\Entity\Caracteristic;
 use App\Entity\PaymentDetail;
 use App\Entity\ShoppingSession;
 use App\Entity\CaracteristicDetail;
-use App\Entity\OrderAdress;
-use App\Entity\Shipping;
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\Bundle\FixturesBundle\Fixture;
+use Symfony\Component\String\Slugger\SluggerInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class AppFixtures extends Fixture
 {
+    protected $slugger;
     private $encoder;
 
-    public function __construct(UserPasswordEncoderInterface $encoder)
+    public function __construct(UserPasswordEncoderInterface $encoder, SluggerInterface $slugger)
     {
         $this->encoder = $encoder;
+        $this->slugger = $slugger;
     }
 
     public function load(ObjectManager $manager)
@@ -62,6 +65,7 @@ class AppFixtures extends Fixture
 
             $category->setName($faker->word);
             $category->setDescription($faker->text);
+            $category->setSlug(strtolower($this->slugger->slug($category->getName())));
 
             $manager->persist($category);
             $categoryList[] = $category;
@@ -104,6 +108,7 @@ class AppFixtures extends Fixture
             $product->addCategory($faker->randomElement($categoryList));
             $product->addCaracteristic($faker->randomElement($caracteristicList));
             $product->setNew($faker->boolean($chanceOfGettingTrue = 25));
+            $product->setSlug(strtolower($this->slugger->slug($product->getName())));
             $productList[] = $product;
             
             $manager->persist($product);

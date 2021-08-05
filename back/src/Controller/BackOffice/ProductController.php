@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller;
+namespace App\Controller\BackOffice;
 
 use App\Entity\Category;
 use App\Entity\Product;
@@ -13,56 +13,25 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * @Route("/product")
+ * @Route("back-office/product")
  */
 class ProductController extends AbstractController
 {
     /**
-     * @Route("/", name="product_index", methods={"GET"})
+     * @Route("/", name="bo_product_index", methods={"GET"})
      */
     public function index(ProductRepository $productRepository, CategoryRepository $categoryRepository): Response
     {
         $categories = $categoryRepository->findAll();
-        return $this->render('product/index.html.twig', [
+        return $this->render('back-office/product/index.html.twig', [
             'products' => $productRepository->findAll(),
             'categories' => $categories,
         ]);
     }
 
-    /**
-     * @Route("/New", name="product_index_new", methods={"GET"})
-     */
-    public function indexNew(ProductRepository $productRepository, CategoryRepository $categoryRepository): Response
-    {
-        $categories = $categoryRepository->findAll();
-        $products = $productRepository->findBy(
-            ['new' => 'Yes']
-        );
-        return $this->render('product/index.html.twig', [
-            'products' => $products,
-            'categories' => $categories,
-        ]);
-    }
 
     /**
-     * @Route("/{id}", name="product_index_cat", methods={"GET"})
-     */
-    public function indexCat(Category $category, CategoryRepository $categoryRepository): Response
-    {
-        $categories = $categoryRepository->findAll();
-
-        return $this->render('product/index.html.twig', [
-            'products' => $category->getProducts(),
-            'categories' => $categories,
-        ]);
-    }
-
-        
-
-    
-
-    /**
-     * @Route("/new", name="product_new", methods={"GET","POST"})
+     * @Route("/create", name="bo_product_create", methods={"GET","POST"})
      */
     public function new(Request $request): Response
     {
@@ -78,24 +47,24 @@ class ProductController extends AbstractController
             return $this->redirectToRoute('product_index', [], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->renderForm('product/new.html.twig', [
+        return $this->renderForm('back-office/product/new.html.twig', [
             'product' => $product,
             'form' => $form,
         ]);
     }
 
     /**
-     * @Route("/{id}", name="product_show", methods={"GET"})
+     * @Route("/{slug}", name="bo_product_show", methods={"GET"})
      */
     public function show(Product $product): Response
     {
-        return $this->render('product/show.html.twig', [
+        return $this->render('back-office/product/show.html.twig', [
             'product' => $product,
         ]);
     }
 
     /**
-     * @Route("/{id}/edit", name="product_edit", methods={"GET","POST"})
+     * @Route("/{slug}/edit", name="bo_product_edit", methods={"GET","POST"})
      */
     public function edit(Request $request, Product $product): Response
     {
@@ -108,14 +77,14 @@ class ProductController extends AbstractController
             return $this->redirectToRoute('product_index', [], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->renderForm('product/edit.html.twig', [
+        return $this->renderForm('back-office/product/edit.html.twig', [
             'product' => $product,
             'form' => $form,
         ]);
     }
 
     /**
-     * @Route("/{id}", name="product_delete", methods={"POST"})
+     * @Route("/{slug}", name="bo_product_delete", methods={"POST"})
      */
     public function delete(Request $request, Product $product): Response
     {

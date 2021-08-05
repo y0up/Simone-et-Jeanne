@@ -8,7 +8,6 @@
     <table class="table">
         <thead>
             <tr>
-                <th>Id</th>
                 <th>Name</th>
                 <th>Description</th>
                 <th>SKU</th>
@@ -20,15 +19,13 @@
         <tbody>
         {% for product in products %}
             <tr>
-                <td>{{ product.id }}</td>
                 <td>{{ product.name }}</td>
                 <td>{{ product.description }}</td>
                 <td>{{ product.SKU }}</td>
                 <td>{{ product.price }}</td>
                 <td>{{ product.new ? 'Yes' : 'No' }}</td>
                 <td>
-                    <a href="{{ path('product_show', {'id': product.id}) }}">show</a>
-                    <a href="{{ path('product_edit', {'id': product.id}) }}">edit</a>
+                    <a href="{{ path('product_show', {'slug': product.slug}) }}">show</a>
                 </td>
             </tr>
         {% else %}
@@ -39,5 +36,4 @@
         </tbody>
     </table>
 
-    <a href="{{ path('product_new') }}">Create new</a>
 {% endblock %}

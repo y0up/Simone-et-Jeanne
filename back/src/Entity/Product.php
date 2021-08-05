@@ -94,6 +94,11 @@ class Product
      */
     private $users;
 
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $slug;
+
     public function __construct()
     {
         $this->reviews = new ArrayCollection();
@@ -374,6 +379,18 @@ class Product
         if ($this->users->removeElement($user)) {
             $user->removeFavorite($this);
         }
+
+        return $this;
+    }
+
+    public function getSlug(): ?string
+    {
+        return $this->slug;
+    }
+
+    public function setSlug(string $slug): self
+    {
+        $this->slug = $slug;
 
         return $this;
     }
