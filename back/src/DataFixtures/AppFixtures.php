@@ -22,16 +22,16 @@ use App\Entity\CaracteristicDetail;
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Symfony\Component\String\Slugger\SluggerInterface;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class AppFixtures extends Fixture
 {
     protected $slugger;
     private $encoder;
 
-    public function __construct(UserPasswordEncoderInterface $encoder, SluggerInterface $slugger)
+    public function __construct(UserPasswordHasherInterface $passwordHasher, SluggerInterface $slugger)
     {
-        $this->encoder = $encoder;
+        $this->passwordHasher = $passwordHasher;
         $this->slugger = $slugger;
     }
 
@@ -123,9 +123,8 @@ class AppFixtures extends Fixture
             $shoppingSession = new ShoppingSession();
             
             $user->setEmail($faker->freeEmail);
-            $user->setUsername($faker->userName);
             $user->setRoles(['ROLE_USER']);
-            $user->setPassword($this->encoder->encodePassword($user, 'user'));
+            $user->setPassword($this->passwordHasher->hashPassword($user, 'the_new_password'));
             $user->setFirstName($faker->firstName);
             $user->setLastName($faker->lastName);
             $user->setphoneNumber($faker->tollFreePhoneNumber);

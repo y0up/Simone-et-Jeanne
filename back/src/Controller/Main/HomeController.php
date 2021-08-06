@@ -40,7 +40,7 @@ class HomeController extends AbstractController
     }
 
     /**
-     * @Route("/{slug}", name="cat_product", methods={"GET"})
+     * @Route("/category/{slug}", name="cat_product", methods={"GET"})
      */
     public function SearchByCat(Category $category, CategoryRepository $categoryRepository): Response
     {

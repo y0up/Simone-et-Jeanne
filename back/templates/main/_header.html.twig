@@ -3,6 +3,7 @@
     {% for category in categories %}
     <a href="{{ path('cat_product', {'slug' : category.slug}) }}">{{category.name}}</a>
     {% endfor %}
-    <h3>A Propos</h3>
-    <h3>Contact</h3>
+    <a href="#">A Propos</a>
+    <a href="#">Contact</a>
+    <a href="{{ path('app_login') }}">Login</a>
 </header>

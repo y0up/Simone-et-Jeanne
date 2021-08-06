@@ -1,6 +1,9 @@
 security:
-    encoders:
+    password_hashers:
+        # use your user class name here
         App\Entity\User:
+            # Use native password hasher, which auto-selects the best
+            # possible hashing algorithm (starting from Symfony 5.3 this is "bcrypt")
             algorithm: auto
 
     # https://symfony.com/doc/current/security/experimental_authenticators.html
@@ -18,7 +21,13 @@ security:
             security: false
         main:
             lazy: true
-            provider: app_user_provider
+            login_throttling:
+                max_attempts: 10
+            custom_authenticator: App\Security\LoginFormAuthenticator
+            logout:
+                path: app_logout
+                # where to redirect after logout
+                # target: main/home.html.twig
 
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#firewalls-authentication

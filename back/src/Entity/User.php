@@ -6,11 +6,13 @@ use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
+ * @UniqueEntity(fields={"email"}, message="There is already an account with this email")
  */
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
@@ -25,11 +27,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @ORM\Column(type="string", length=180, unique=true)
      */
     private $email;
-
-    /**
-     * @ORM\Column(type="string", length=180, unique=true)
-     */
-    private $username;
 
     /**
      * @ORM\Column(type="json")
@@ -88,7 +85,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $orderDetail;
 
     /**
-     * @ORM\ManyToMany(targetEntity=product::class, inversedBy="users")
+     * @ORM\ManyToMany(targetEntity=Product::class, inversedBy="users")
      */
     private $favorite;
 
@@ -96,6 +93,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @ORM\Column(type="date")
      */
     private $dateOfBirth;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $isVerified = false;
 
     public function __construct()
     {
@@ -109,6 +111,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         return (string) $this->email;
     }
+
+    /**
+ * A visual identifier that represents this user.
+ *
+ * @see UserInterface
+ */
+public function getUsername(): string
+{
+    return (string) $this->email;
+}
 
     public function getId(): ?int
     {
@@ -189,26 +201,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
-    }
-
-    /**
-     * Get the value of username
-     */ 
-    public function getUsername()
-    {
-        return $this->username;
-    }
-
-    /**
-     * Set the value of username
-     *
-     * @return  self
-     */ 
-    public function setUsername($username)
-    {
-        $this->username = $username;
-
-        return $this;
     }
 
     public function getFirstName(): ?string
@@ -374,14 +366,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * @return Collection|product[]
+     * @return Collection|Product[]
      */
     public function getFavorite(): Collection
     {
         return $this->favorite;
     }
 
-    public function addFavorite(product $favorite): self
+    public function addFavorite(Product $favorite): self
     {
         if (!$this->favorite->contains($favorite)) {
             $this->favorite[] = $favorite;
@@ -390,7 +382,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function removeFavorite(product $favorite): self
+    public function removeFavorite(Product $favorite): self
     {
         $this->favorite->removeElement($favorite);
 
@@ -405,6 +397,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setDateOfBirth(\DateTimeInterface $dateOfBirth): self
     {
         $this->dateOfBirth = $dateOfBirth;
+
+        return $this;
+    }
+
+    public function isVerified(): bool
+    {
+        return $this->isVerified;
+    }
+
+    public function setIsVerified(bool $isVerified): self
+    {
+        $this->isVerified = $isVerified;
 
         return $this;
     }
