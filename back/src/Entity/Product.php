@@ -99,6 +99,11 @@ class Product
      */
     private $slug;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $brand;
+
     public function __construct()
     {
         $this->reviews = new ArrayCollection();
@@ -391,6 +396,18 @@ class Product
     public function setSlug(string $slug): self
     {
         $this->slug = $slug;
+
+        return $this;
+    }
+
+    public function getBrand(): ?string
+    {
+        return $this->brand;
+    }
+
+    public function setBrand(?string $brand): self
+    {
+        $this->brand = $brand;
 
         return $this;
     }

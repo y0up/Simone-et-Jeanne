@@ -55,10 +55,18 @@ class HomeController extends AbstractController
     /**
      * @Route("/product/{slug}", name="product_show", methods={"GET"})
      */
-    public function show(Product $product): Response
+    public function show(Product $product, ProductRepository $productRepository, CategoryRepository $categoryRepository): Response
     {
+        $caracteristics = $product->getCaracteristic();
+        $reviews = $product->getReviews();
+        $categories = $product->getCategories();
+        $randomProducts = $categories[0]->getProducts();
+
         return $this->render('main/show.html.twig', [
             'product' => $product,
+            'caracteristics' => $caracteristics,
+            'reviews' => $reviews,
+            'randomProducts' => $randomProducts,
         ]);
     }
 

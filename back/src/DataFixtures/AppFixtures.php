@@ -102,6 +102,7 @@ class AppFixtures extends Fixture
 
 
             $product->setName($faker->word);
+            $product->setBrand($faker->company);
             $product->setDescription($faker->text);
             $product->setPrice($faker->randomFloat($nbMaxDecimals = 2, $min = 15, $max = 100));
             $product->setInventory($inventory);
@@ -274,6 +275,7 @@ class AppFixtures extends Fixture
                             $review->setContent($faker->text);
                             $review->setRate($faker->numberBetween($min = 0, $max = 5));
                             $review->setUser($userConnected);
+                            $review->setCreatedAt(new \DateTime($faker->date($format = 'Y-m-d', $max = 'now')));
                             
                             $manager->persist($review);
                             

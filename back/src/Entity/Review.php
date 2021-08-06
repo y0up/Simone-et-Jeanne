@@ -30,7 +30,7 @@ class Review
     /**
      * @ORM\Column(type="datetime", nullable=true)
      */
-    private $cretatedAt;
+    private $createdAt;
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
@@ -56,6 +56,11 @@ class Review
      * @ORM\Column(type="string", length=255)
      */
     private $title;
+
+    public function __toString()
+    {
+        return (string) $this->createdAt;
+    }
 
     public function getId(): ?int
     {
@@ -86,14 +91,14 @@ class Review
         return $this;
     }
 
-    public function getCretatedAt(): ?\DateTimeInterface
+    public function getCreatedAt(): ?\DateTimeInterface
     {
-        return $this->cretatedAt;
+        return $this->createdAt;
     }
 
-    public function setCretatedAt(?\DateTimeInterface $cretatedAt): self
+    public function setCreatedAt(?\DateTimeInterface $createdAt): self
     {
-        $this->cretatedAt = $cretatedAt;
+        $this->createdAt = $createdAt;
 
         return $this;
     }
