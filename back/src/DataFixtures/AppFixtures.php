@@ -124,7 +124,7 @@ class AppFixtures extends Fixture
             
             $user->setEmail($faker->freeEmail);
             $user->setRoles(['ROLE_USER']);
-            $user->setPassword($this->passwordHasher->hashPassword($user, 'the_new_password'));
+            $user->setPassword($this->passwordHasher->hashPassword($user, 'sasuuke'));
             $user->setFirstName($faker->firstName);
             $user->setLastName($faker->lastName);
             $user->setphoneNumber($faker->tollFreePhoneNumber);

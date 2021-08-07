@@ -65,17 +65,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $updatedAt;
 
     /**
-     * @ORM\OneToMany(targetEntity=Adress::class, mappedBy="user")
+     * @ORM\OneToMany(targetEntity=Adress::class, mappedBy="user", orphanRemoval=true)
      */
     private $adresses;
 
     /**
-     * @ORM\OneToMany(targetEntity=Payment::class, mappedBy="user")
+     * @ORM\OneToMany(targetEntity=Payment::class, mappedBy="user", orphanRemoval=true)
      */
     private $payments;
 
     /**
-     * @ORM\OneToMany(targetEntity=Review::class, mappedBy="user")
+     * @ORM\OneToMany(targetEntity=Review::class, mappedBy="user", orphanRemoval=true)
      */
     private $reviews;
 
@@ -85,7 +85,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $orderDetail;
 
     /**
-     * @ORM\ManyToMany(targetEntity=Product::class, inversedBy="users")
+     * @ORM\ManyToMany(targetEntity=Product::class, inversedBy="users", orphanRemoval=true)
      */
     private $favorite;
 

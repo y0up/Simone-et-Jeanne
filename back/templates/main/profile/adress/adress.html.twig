@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}User Adress{% endblock %}
+
+{% block body %}
+    <h1>Adress</h1>
+    
+    <a href="{{ path('adress_add', {'slug': user.slug}) }}">Add</a>
+    <hr>
+    {% if app.request.get('_route') == 'adress_add' %}
+    {{ include('main/profile/adress/_form.html.twig', {'button_label': 'Add', 'slug': user.slug}) }}
+    {% endif %}
+    {% for adress in adresses %}
+        {% if app.request.get('id') == adress.id %}
+        {{ include('main/profile/adress/_form.html.twig', {'button_label': 'Update', 'slug': user.slug}) }}
+            <hr>
+            <hr>
+        {% endif %}
+
+        {% if app.request.get('id') != adress.id %}
+            {{ adress.firstName }} {{ adress.lastName }}
+            <br>
+            {{ adress.line1 }}
+            <br>
+            {% if adress.line2 is not null %}
+                {{ adress.line2 }}
+                <br>
+            {% endif %}
+            {{ adress.postalCode }}, {{ adress.city }}
+            <br>
+            {{ adress.country }}
+            <br>
+            {{ adress.telephone }}
+            <br>
+            <a href="{{ path('adress_edit', {'slug': user.slug, 'id': adress.id}) }}">edit</a>
+            {{ include('main/profile/adress/_delete_form.html.twig') }}
+            <hr>
+            <hr>
+        {% endif %}
+    {% endfor %}
+{% endblock %}
