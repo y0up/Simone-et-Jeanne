@@ -156,6 +156,7 @@ class AppFixtures extends Fixture
                 $payment = new Payment();
                 
                 $payment->setType($faker->creditCardType());
+                $payment->setName($faker->firstName.' '.$faker->lastName);
                 $payment->setAccountNumber($faker->numberBetween($min = 700000, $max = 100000000));
                 $payment->setExpiry($faker->creditCardExpirationDate());
                 $payment->setProvider($faker->word);

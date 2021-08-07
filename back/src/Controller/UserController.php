@@ -4,11 +4,14 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Entity\Adress;
+use App\Entity\Payment;
 use App\Form\UserType;
 use App\Form\AdressType;
+use App\Form\PaymentType;
 use App\Form\ChangePasswordType;
 use App\Repository\UserRepository;
 use App\Repository\AdressRepository;
+use App\Repository\PaymentRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -135,7 +138,7 @@ class UserController extends AbstractController
     /**
      * @Route("/{slug}/adress/add", name="adress_add", methods={"GET","POST"})
      */
-    public function new(Request $request, User $user): Response
+    public function newAdress(Request $request, User $user): Response
     {
         $adresses = $user->getAdresses();
 
@@ -174,5 +177,88 @@ class UserController extends AbstractController
         }
 
         return $this->redirectToRoute('user_adress', ['slug' => $user->getSlug()], Response::HTTP_SEE_OTHER);
+    }
+
+    // PAGE PAYMENT
+
+    /**
+     * @Route("/{slug}/payment", name="user_payment", methods={"GET"})
+     */
+    public function payment(User $user): Response
+    {
+        $payments = $user->getPayments();
+
+        return $this->render('main/profile/payment/payment.html.twig', [
+            'user' => $user,
+            'payments' => $payments,
+        ]);
+    }
+
+    /**
+     * @Route("/{slug}/payment/edit", name="payment_edit", methods={"GET","POST"})
+     */
+    public function paymentEdit(Request $request, User $user, Payment $payment, PaymentRepository $paymentRepository): Response
+    {
+        $payments = $user->getPayments();
+        $payment = $paymentRepository->findOneBy(['id' => $request->get('id')]);
+
+        $form = $this->createForm(PaymentType::class, $payment);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->getDoctrine()->getManager()->flush();
+
+            return $this->redirectToRoute('user_payment', ['slug' => $user->getSlug()], Response::HTTP_SEE_OTHER);
+        }
+
+        return $this->renderForm('main/profile/payment/payment.html.twig', [
+            'user' => $user,
+            'payments' => $payments,
+            'form' => $form,
+        ]);
+    }    
+
+    /**
+     * @Route("/{slug}/payment/add", name="payment_add", methods={"GET","POST"})
+     */
+    public function newPayment(Request $request, User $user): Response
+    {
+        $payments = $user->getPayments();
+
+        $payment = new payment();
+        $payment->setUser($user);
+
+        $form = $this->createForm(PaymentType::class, $payment);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($payment);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('user_payment', ['slug' => $user->getSlug()], Response::HTTP_SEE_OTHER);
+        }
+
+        return $this->renderForm('main/profile/payment/payment.html.twig', [
+            'user' => $user,
+            'payments' => $payments,
+            'form' => $form,
+        ]);
+    }
+
+    /**
+     * @Route("/{slug}/payment/delete", name="payment_delete", methods={"POST", "GET"})
+     */
+    public function paymentDelete(Request $request, User $user, PaymentRepository $paymentRepository, Payment $payment): Response
+    {
+        $payment = $paymentRepository->findOneBy(['id' => $request->get('id')]);
+
+        if ($this->isCsrfTokenValid('delete'.$payment->getId(), $request->request->get('_token'))) {
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->remove($payment);
+            $entityManager->flush();
+        }
+
+        return $this->redirectToRoute('user_payment', ['slug' => $user->getSlug()], Response::HTTP_SEE_OTHER);
     }
 }
