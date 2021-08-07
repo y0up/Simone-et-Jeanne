@@ -128,6 +128,7 @@ class AppFixtures extends Fixture
             $user->setFirstName($faker->firstName);
             $user->setLastName($faker->lastName);
             $user->setphoneNumber($faker->tollFreePhoneNumber);
+            $user->setSlug(strtolower($this->slugger->slug($user->getfirstName(), '-', $user->getLastName())));
             for ($k=0; $k < $faker->numberBetween($min = 0, $max = 3); $k++) { 
                 $user->addFavorite($faker->randomElement($productList));
             }

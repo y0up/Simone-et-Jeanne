@@ -18,10 +18,12 @@ class HomeController extends AbstractController
     public function home(CategoryRepository $categoryRepository): Response
     {
         $categories = $categoryRepository->findAll();
+        $user = $this->getUser();
 
         return $this->render('main/home.html.twig', [
             'controller_name' => 'HomeController',
             'categories' => $categories,
+            'user' => $user,
             
         ]);
     }
