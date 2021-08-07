@@ -137,6 +137,8 @@ class AppFixtures extends Fixture
             for ($j=0; $j < $randomNumber; $j++) { 
                 $adress = new Adress();
                 
+                $adress->setFirstName($faker->firstName);
+                $adress->setLastName($faker->lastName);
                 $adress->setLine1($faker->streetAddress);
                 $adress->setCity($faker->city);
                 $adress->setPostalCode($faker->randomNumber($nbDigits = 5, $strict = true));

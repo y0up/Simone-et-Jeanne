@@ -18,10 +18,12 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 class UserController extends AbstractController
 {
 
+    // PAGE INFORMATION
+
     /**
-     * @Route("/{slug}", name="user_info", methods={"GET"})
+     * @Route("/{slug}/info", name="user_info", methods={"GET"})
      */
-    public function show(User $user): Response
+    public function info(User $user): Response
     {
         return $this->render('main/profile/info.html.twig', [
             'user' => $user,
@@ -82,6 +84,23 @@ class UserController extends AbstractController
 
         return $this->render('main/profile/change_password.html.twig', [
             'form' => $form->createView(),
+        ]);
+    }
+
+    // PAGE ADRESSES
+
+    /**
+     * @Route("/{slug}/adress", name="user_adress", methods={"GET"})
+     */
+    public function adress(User $user): Response
+    {
+       
+
+        $adresses = $user->getAdresses();
+
+        return $this->render('main/profile/adress.html.twig', [
+            'user' => $user,
+            'adresses' => $adresses,
         ]);
     }
 }

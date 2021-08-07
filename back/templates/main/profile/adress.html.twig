@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}User Adress{% endblock %}
+
+{% block body %}
+    <h1>Adress</h1>
+
+    {% for adress in adresses %}
+        {{ adress.firstName }} {{ adress.lastName }}
+        {{ adress.line1 }}
+        {% if adress.line2 is defined %}
+        {{ adress.line1 }}
+        {% endif %}
+        {{ adress.postalCode }}, {{ adress.city }}
+        {{ adress.country }}
+        {{ adress.telephone }}
+    {% endfor %}
+{% endblock %}
