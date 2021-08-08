@@ -1,0 +1,23 @@
+const { default: axios } = require("axios");
+
+function onClickBtnFav(event) {
+    event.preventDefault();
+
+    const url = this.href;
+    const icone = this.querySelector('svg');
+    console.log(icone.dataset.prefix);
+
+    axios.get(url).then(function (response) {
+
+        
+        if (icone.dataset.prefix == 'fas') {
+            icone.dataset.prefix = 'far';
+        } else {
+            icone.dataset.prefix = 'fas';
+        }
+    });
+}
+
+   document.querySelectorAll('a.js-fav').forEach(function(link){
+        link.addEventListener('click', onClickBtnFav);
+    })

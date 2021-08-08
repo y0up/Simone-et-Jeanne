@@ -72,9 +72,18 @@
 
         </tbody>
     </table>
+    <a href="{{ path('favorite', {'productId' : product.id}) }}" class="js-fav">
+        {% if product.likedByUser(user) %}
+            <i class="fas fa-heart"></i>
+        {% else %}
+            <i class="far fa-heart"></i>
+        {% endif %}
+        </a>
 
-        <a href="{{ path('favorite', {'productId' : product.id}) }}">ajouter aux favoris</a>
 
-    <a href="{{ path('all_product') }}">back to list</a>
+{% endblock %}
 
+{% block javascripts %}
+     {{ parent() }}
+     {{ encore_entry_script_tags('fav') }}
 {% endblock %}
