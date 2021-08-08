@@ -1,0 +1,36 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}OrderDetail index{% endblock %}
+
+{% block body %}
+    <h1>OrderDetail index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+
+                <th>CreatedAt</th>
+                <th>UpdatedAt</th>
+                <th>Status</th>
+                <th>CommandNumber</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for order_detail in order_details %}
+            <tr>
+                <td>{{ order_detail.createdAt ? order_detail.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ order_detail.updatedAt ? order_detail.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ order_detail.status }}</td>
+                <td>{{ order_detail.commandNumber }}</td>
+                <td><a href="{{path('command_show', {'slug': user.slug, 'commandNumber': order_detail.commandNumber})}}">Show</a></td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="8">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock %}

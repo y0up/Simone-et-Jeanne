@@ -2,13 +2,14 @@
 
 namespace App\Entity;
 
-use App\Repository\UserRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
+use App\Entity\OrderDetail;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\UserRepository;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
-use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
@@ -80,9 +81,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $reviews;
 
     /**
-     * @ORM\OneToOne(targetEntity=OrderDetail::class, cascade={"persist", "remove"})
+     * @ORM\OneToMany(targetEntity=OrderDetail::class, mappedBy="user")
      */
-    private $orderDetail;
+    private $orderDetails;
 
     /**
      * @ORM\ManyToMany(targetEntity=Product::class, inversedBy="users")
@@ -110,6 +111,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->payments = new ArrayCollection();
         $this->reviews = new ArrayCollection();
         $this->favorite = new ArrayCollection();
+        $this->orderDetails = new ArrayCollection();
     }
 
     public function __toString()
@@ -358,6 +360,36 @@ public function getUsername(): string
         return $this;
     }
 
+
+    /**
+     * @return Collection|OrderDetail[]
+     */
+    public function getorderDetails(): Collection
+    {
+        return $this->orderDetails;
+    }
+
+    public function addOrderDetails(OrderDetail $orderDetail): self
+    {
+        if (!$this->orderDetails->contains($orderDetail)) {
+            $this->orderDetails[] = $orderDetail;
+            $orderDetail->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeOrderDetail(OrderDetail $orderDetail): self
+    {
+        if ($this->orderDetails->removeElement($orderDetail)) {
+            // set the owning side to null (unless already changed)
+            if ($orderDetail->getUser() === $this) {
+                $orderDetail->setUser(null);
+            }
+        }
+
+        return $this;
+    }
     public function getOrderDetail(): ?OrderDetail
     {
         return $this->orderDetail;

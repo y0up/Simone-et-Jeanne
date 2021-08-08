@@ -35,6 +35,11 @@ class OrderDetail
     private $updatedAt;
 
     /**
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="orderDetails")
+     */
+    private $user;
+
+    /**
      * @ORM\OneToOne(targetEntity=PaymentDetail::class, inversedBy="orderDetail", cascade={"persist", "remove"})
      */
     private $PaymentDetail;
@@ -58,6 +63,16 @@ class OrderDetail
      * @ORM\Column(type="string", length=255)
      */
     private $status;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $commandNumber;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $shippingChoice;
 
     public function __construct()
     {
@@ -102,6 +117,18 @@ class OrderDetail
     public function setUpdatedAt(?\DateTimeInterface $updatedAt): self
     {
         $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): self
+    {
+        $this->user = $user;
 
         return $this;
     }
@@ -198,6 +225,30 @@ class OrderDetail
     public function setStatus(string $status): self
     {
         $this->status = $status;
+
+        return $this;
+    }
+
+    public function getCommandNumber(): ?string
+    {
+        return $this->commandNumber;
+    }
+
+    public function setCommandNumber(string $commandNumber): self
+    {
+        $this->commandNumber = $commandNumber;
+
+        return $this;
+    }
+
+    public function getShippingChoice(): ?string
+    {
+        return $this->shippingChoice;
+    }
+
+    public function setShippingChoice(string $shippingChoice): self
+    {
+        $this->shippingChoice = $shippingChoice;
 
         return $this;
     }

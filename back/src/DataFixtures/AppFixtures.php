@@ -46,7 +46,7 @@ class AppFixtures extends Fixture
         $shipping = [];
         $adressStatus = array("adresse de livraison", "adresse de facturation");
         $orderStatusList = array("prepared", "shipped", "treated");
-
+  
         //create shipping possibilities
         $shipping = new Shipping();
         $shipping->setTitle("atelier");
@@ -117,7 +117,7 @@ class AppFixtures extends Fixture
 
         $randomProductObject = $faker->randomElement($productList);
 
-        for ($i=0; $i < 30; $i++) { 
+        for ($i=0; $i < 100; $i++) { 
             $randomNumber = $faker->numberBetween($min = 1, $max = 3);
             $user = new User();
             $shoppingSession = new ShoppingSession();
@@ -129,7 +129,7 @@ class AppFixtures extends Fixture
             $user->setLastName($faker->lastName);
             $user->setphoneNumber($faker->tollFreePhoneNumber);
             $user->setSlug(strtolower($this->slugger->slug($user->getfirstName(), '-', $user->getLastName())));
-            for ($k=0; $k < $faker->numberBetween($min = 0, $max = 3); $k++) { 
+            for ($j=0; $j < $faker->numberBetween($min = 0, $max = 3); $j++) { 
                 $user->addFavorite($faker->randomElement($productList));
             }
             $user->setDateOfBirth(new \DateTime($faker->date($format = 'Y-m-d', $max = 'now')));
@@ -171,6 +171,8 @@ class AppFixtures extends Fixture
         }
 
         //visitor
+        $l=0;
+
         for ($i=0; $i < 20; $i++) { 
             $total = 0;
             $cartItemProductList = [];
@@ -204,10 +206,13 @@ class AppFixtures extends Fixture
             // creation of the order
 
             $orderDetail = new OrderDetail();
-
+            $l = $l++;
+            $commandNumber = date('d').date('m').date('y').'0000'.$l;
             $orderDetail->setTotal($total);
             $orderDetail->setShippingPrice($shippingPrice);
+            $orderDetail->setShippingChoice($shoppingSession->getShipping()->getTitle());
             $orderDetail->setStatus($faker->randomElement($orderStatusList));
+            $orderDetail->setCommandNumber($commandNumber);
 
             $paymentDetail = new PaymentDetail();
 
@@ -247,110 +252,119 @@ class AppFixtures extends Fixture
         }
 
         //connected
+        $l=0;
         $userConnectedList = [];
         for ($i=0; $i < 10; $i++) { 
             $cartItemProductList = [];
             $cartItemList = [];
             $userConnected = $faker->randomElement($userList);
             if (in_array($userConnected, $userConnectedList) == false) {
-                
-                $shoppingSession = new ShoppingSession();
-                // creation of the cart
-                for ($j=0; $j < 5; $j++) { 
-                    $randomProductObject = $faker->randomElement($productList);
-                    if (in_array($randomProductObject, $cartItemProductList) == false) {
-                        
-                        $cartItem = new CartItem();
-                        
-                        $cartItem->setProduct($randomProductObject);
-                        $cartItem->setQuantity($faker->numberBetween($min = 1, $max = 5));
-                        $cartItem->setShoppingSession($shoppingSession);
-                        
-                        $total = $total + ($randomProductObject->getPrice() * $cartItem->getQuantity());
-                        
-                        $manager->persist($cartItem);
-                        
-                        for ($j=0; $j < $randomNumber; $j++) { 
+
+
+                    $shoppingSession = new ShoppingSession();
+                    // creation of the cart
+                    for ($j=0; $j < 5; $j++) { 
+                        $randomProductObject = $faker->randomElement($productList);
+                        if (in_array($randomProductObject, $cartItemProductList) == false) {
                             
-                            $review = new Review();
+                            $cartItem = new CartItem();
                             
-                            $review->setTitle($faker->sentence($nbWords = 6, $variableNbWords = true));
-                            $review->setContent($faker->text);
-                            $review->setRate($faker->numberBetween($min = 0, $max = 5));
-                            $review->setUser($userConnected);
-                            $review->setCreatedAt(new \DateTime($faker->date($format = 'Y-m-d', $max = 'now')));
+                            $cartItem->setProduct($randomProductObject);
+                            $cartItem->setQuantity($faker->numberBetween($min = 1, $max = 5));
+                            $cartItem->setShoppingSession($shoppingSession);
                             
-                            $manager->persist($review);
+                            $total = $total + ($randomProductObject->getPrice() * $cartItem->getQuantity());
                             
-                            $randomProductObject->addReview($review);
+                            $manager->persist($cartItem);
                             
-                            $manager->persist($randomProductObject);
+                            for ($k=0; $k < $randomNumber; $k++) { 
+                                
+                                $review = new Review();
+                                
+                                $review->setTitle($faker->sentence($nbWords = 6, $variableNbWords = true));
+                                $review->setContent($faker->text);
+                                $review->setRate($faker->numberBetween($min = 0, $max = 5));
+                                $review->setUser($userConnected);
+                                $review->setCreatedAt(new \DateTime($faker->date($format = 'Y-m-d', $max = 'now')));
+                                
+                                $manager->persist($review);
+                                
+                                $randomProductObject->addReview($review);
+                                
+                                $manager->persist($randomProductObject);
+                            }
+                            
+                            $cartItemProductList[] = $randomProductObject;
+                            $cartItemList[] = $cartItem;
                         }
-                        
-                        $cartItemProductList[] = $randomProductObject;
-                        $cartItemList[] = $cartItem;
                     }
-                }
-                
-                $shoppingSession->setUser($userConnected);
-                $shoppingSession->setShipping($faker->randomElement($shippingList));
-                $shippingPrice = $shoppingSession->getShipping()->getPrice();
-                $total = $total + ($shippingPrice);
-                $shoppingSession->setTotal($total);
-                $manager->persist($shoppingSession);
-                
-                // creation of the order
-                
-                $orderDetail = new OrderDetail();
-                
-                $orderDetail->setTotal($total);
-                $orderDetail->setShippingPrice($shippingPrice);
-                $orderDetail->setStatus($faker->randomElement($orderStatusList));
-                
-                $userPayment = $faker->randomElement($userConnected->getPayments());
-                
-                $paymentDetail = new PaymentDetail();
-                
-                $paymentDetail->setAmount($total);
-                $paymentDetail->setProvider($userPayment->getProvider());
-                $paymentDetail->setStatus("payed");
-                $manager->persist($paymentDetail);
-                
-                $orderDetail->setPaymentDetail($paymentDetail);
-                
-                $manager->persist($orderDetail);
-                
-                $userAdress = $faker->randomElement($userConnected->getAdresses());
-                
-                $orderAdress = new OrderAdress();
-                $orderAdress->setLine1($userAdress->getLine1());
-                $orderAdress->setCity($userAdress->getCity());
-                $orderAdress->setPostalCode($userAdress->getPostalCode());
-                $orderAdress->setCountry($userAdress->getCountry());
-                $orderAdress->setFirstName($userConnected->getFirstName());
-                $orderAdress->setLastName($userConnected->getLastName());
-                $orderAdress->setPhoneNumber($userAdress->getTelephone());
-                $orderAdress->setStatus("adresse de livraison");
-                $orderAdress->setOrderDetail($orderDetail);
-                $orderAdress->setCreatedAt(new \DateTimeImmutable($faker->date($format = 'Y-m-d', $max = 'now')));
-                
-                $manager->persist($orderAdress);
-                
-                foreach ($cartItemList as $a) {
-                    $orderItem = new OrderItem();
-                    $orderItem->setProduct($a->getProduct());
-                    $orderItem->setQuantity($a->getQuantity());
-                    $orderItem->setOrderDetail($orderDetail);
                     
-                    $manager->persist($orderItem);
+                    $shoppingSession->setUser($userConnected);
+                    $shoppingSession->setShipping($faker->randomElement($shippingList));
+                    $shippingPrice = $shoppingSession->getShipping()->getPrice();
+                    $total = $total + ($shippingPrice);
+                    $shoppingSession->setTotal($total);
+                    $manager->persist($shoppingSession);
                     
+                    // creation of the order
+                    
+                    $orderDetail = new OrderDetail();
+                    
+                    $orderDetail->setUser($userConnected);
+                    $commandNumber = date('d').date('m').date('y').'0000'.$l;
+                    $orderDetail->setTotal($total);
+                    $orderDetail->setShippingPrice($shippingPrice);
+                    $orderDetail->setShippingChoice($shoppingSession->getShipping()->getTitle());
+                    $orderDetail->setStatus($faker->randomElement($orderStatusList));
+                    $orderDetail->setCommandNumber($commandNumber);
+                    
+                    $userPayment = $faker->randomElement($userConnected->getPayments());
+                    
+                    $paymentDetail = new PaymentDetail();
+                    
+                    $paymentDetail->setAmount($total);
+                    $paymentDetail->setProvider($userPayment->getProvider());
+                    $paymentDetail->setStatus("payed");
+                    $manager->persist($paymentDetail);
+                    
+                    $orderDetail->setPaymentDetail($paymentDetail);
+                    
+                    $manager->persist($orderDetail);
+                    
+                    $manager->persist($userConnected);
+                    
+                    $userAdress = $faker->randomElement($userConnected->getAdresses());
+                    
+                    $orderAdress = new OrderAdress();
+                    $orderAdress->setLine1($userAdress->getLine1());
+                    $orderAdress->setCity($userAdress->getCity());
+                    $orderAdress->setPostalCode($userAdress->getPostalCode());
+                    $orderAdress->setCountry($userAdress->getCountry());
+                    $orderAdress->setFirstName($userConnected->getFirstName());
+                    $orderAdress->setLastName($userConnected->getLastName());
+                    $orderAdress->setPhoneNumber($userAdress->getTelephone());
+                    $orderAdress->setStatus("adresse de livraison");
+                    $orderAdress->setOrderDetail($orderDetail);
+                    $orderAdress->setCreatedAt(new \DateTimeImmutable($faker->date($format = 'Y-m-d', $max = 'now')));
+                    
+                    $manager->persist($orderAdress);
+                    
+                    foreach ($cartItemList as $a) {
+                        $orderItem = new OrderItem();
+                        $orderItem->setProduct($a->getProduct());
+                        $orderItem->setQuantity($a->getQuantity());
+                        $orderItem->setOrderDetail($orderDetail);
+                        
+                        $manager->persist($orderItem);
+                        
+                    }
+                    
+                    $randomNumber = $faker->numberBetween($min = 0, $max = 3);
+                    $userConnectedList[] = $userConnected;
                 }
-                
-                $randomNumber = $faker->numberBetween($min = 0, $max = 3);
-                $userConnectedList[] = $userConnected;
+                $l = $l++;
             }
-            
-        }
+
 
         $manager->flush();
     }

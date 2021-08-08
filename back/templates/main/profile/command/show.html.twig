@@ -1,0 +1,40 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}OrderDetail{% endblock %}
+
+{% block body %}
+    <h1>OrderDetail</h1>
+
+    <h2>Commande n°{{ order_detail.commandNumber }}</h2>
+
+    <h4>status de la commande: {{ order_detail.status }}</h4>
+    <hr>
+    <h3>Information de livraison:</h3>
+    {{ order_detail.shippingChoice }}
+    {{ orderAdress.firstName }} {{ orderAdress.lastName }}
+            <br>
+            {{ orderAdress.line1 }}
+            <br>
+            {% if orderAdress.line2 is not null %}
+                {{ orderAdress.line2 }}
+                <br>
+            {% endif %}
+            {{ orderAdress.postalCode }}, {{ orderAdress.city }}
+            <br>
+            {{ orderAdress.country }}
+            <br>
+            {{ orderAdress.phoneNumber }}
+            <hr>
+
+        {% for item in orderItems %}
+            {{item.product.name}}
+            {{item.product.price}}
+        {% endfor %}
+        <hr>
+        <h4>information de paiement: </h4>
+        <p>sous-total: {{order_detail.total}}</p>
+        <p>livraison: {{order_detail.shippingPrice}}</p>
+        <h5>TOTAL: {{order_detail.total + order_detail.shippingPrice}}</h5>
+
+
+{% endblock %}

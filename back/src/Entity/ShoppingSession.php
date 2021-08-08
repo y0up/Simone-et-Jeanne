@@ -35,12 +35,12 @@ class ShoppingSession
     private $updatedAt;
 
     /**
-     * @ORM\OneToOne(targetEntity=User::class, cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity=User::class)
      */
     private $user;
 
     /**
-     * @ORM\OneToMany(targetEntity=CartItem::class, mappedBy="shoppingSession")
+     * @ORM\OneToMany(targetEntity=CartItem::class, mappedBy="shoppingSession", cascade={"persist", "remove"})
      */
     private $cartItems;
 

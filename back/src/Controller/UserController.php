@@ -4,14 +4,19 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Entity\Adress;
-use App\Entity\Payment;
 use App\Form\UserType;
+use App\Entity\Payment;
 use App\Form\AdressType;
 use App\Form\PaymentType;
+use App\Entity\OrderDetail;
 use App\Form\ChangePasswordType;
 use App\Repository\UserRepository;
 use App\Repository\AdressRepository;
+use App\Repository\OrderAdressRepository;
 use App\Repository\PaymentRepository;
+use App\Repository\OrderDetailRepository;
+use App\Repository\OrderItemRepository;
+use App\Repository\ProductRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -261,4 +266,44 @@ class UserController extends AbstractController
 
         return $this->redirectToRoute('user_payment', ['slug' => $user->getSlug()], Response::HTTP_SEE_OTHER);
     }
+
+    // PAGE COMMAND
+
+    /**
+     * @Route("/{slug}/command", name="command_index", methods={"GET"})
+     */
+    public function index(OrderDetailRepository $orderDetailRepository, User $user): Response
+    {
+        $orderDetails = $user->getorderDetails();
+
+        return $this->render('main/profile/command/index.html.twig', [
+            'order_details' => $orderDetails,
+            'user' => $user,
+        ]);
+    }
+
+
+    /**
+     * @Route("/{slug}/command/{commandNumber}", name="command_show", methods={"GET"})
+     */
+    public function show(OrderDetail $orderDetail, OrderAdressRepository $orderAdressRepository, OrderItemRepository $orderItemRepository, ProductRepository $productRepository): Response
+    {
+        $orderAdress = $orderAdressRepository->findOneBy([
+            'status' => 'adresse de livraison',
+            'orderDetail' => $orderDetail,
+        ]);
+
+        $orderItems = $orderItemRepository->findBy([
+            'orderDetail' => $orderDetail,
+        ]);
+
+        return $this->render('main/profile/command/show.html.twig', [
+            'order_detail' => $orderDetail,
+            'orderAdress' => $orderAdress,
+            'orderItems' => $orderItems,
+        ]);
+    }
+
+
+
 }
