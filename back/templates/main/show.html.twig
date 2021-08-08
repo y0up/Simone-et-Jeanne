@@ -73,6 +73,8 @@
         </tbody>
     </table>
 
+        <a href="{{ path('favorite', {'productId' : product.id}) }}">ajouter aux favoris</a>
+
     <a href="{{ path('all_product') }}">back to list</a>
 
 {% endblock %}

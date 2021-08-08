@@ -411,4 +411,19 @@ class Product
 
         return $this;
     }
+
+    /**
+     * did a user added this product to favorite
+     *
+     * @param User $user
+     * @return boolean
+     */
+    public function likedByUser(User $user) : bool {
+        foreach ($this->getUsers() as $a) {
+            if ($a === $user ) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

@@ -2,10 +2,14 @@
 
 namespace App\Controller\Main;
 
+use App\Entity\User;
 use App\Entity\Product;
 use App\Entity\Category;
 use App\Repository\ProductRepository;
 use App\Repository\CategoryRepository;
+use Doctrine\Persistence\ObjectManager;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -57,8 +61,10 @@ class HomeController extends AbstractController
     /**
      * @Route("/product/{slug}", name="product_show", methods={"GET"})
      */
-    public function show(Product $product, ProductRepository $productRepository, CategoryRepository $categoryRepository): Response
+    public function show(Product $product, Request $request): Response
     {
+        $user = $this->getUser();
+
         $caracteristics = $product->getCaracteristic();
         $reviews = $product->getReviews();
         $categories = $product->getCategories();
@@ -69,6 +75,7 @@ class HomeController extends AbstractController
             'caracteristics' => $caracteristics,
             'reviews' => $reviews,
             'randomProducts' => $randomProducts,
+            'user' => $user,
         ]);
     }
 
@@ -85,6 +92,32 @@ class HomeController extends AbstractController
             'products' => $products,
             'categories' => $categories,
         ]);
+    }
+
+        /**
+     * @Route("/favorite", name="favorite", methods={"GET", "POST"})
+     */
+    public function Favorite(Request $request, ProductRepository $productRepository, EntityManagerInterface $manager): Response
+    {
+        $user = $this->getUser();
+        $product = $productRepository->findOneBy(['id' => $request->get('productId')]);
+
+        if ($product->likedByUser($user)) {
+
+            $product->removeUser($user);
+            $manager->persist($product);
+            $manager->flush();
+
+            return $this->json(['message' => 'il aime plus.']);
+        } 
+
+            $product->addUser($user);
+            $manager->persist($product);
+            $manager->flush();
+
+            return $this->json(['message' => 'il aime maintenant.']);
+     
+
     }
 
 }

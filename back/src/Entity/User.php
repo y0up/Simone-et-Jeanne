@@ -85,7 +85,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $orderDetail;
 
     /**
-     * @ORM\ManyToMany(targetEntity=Product::class, inversedBy="users", orphanRemoval=true)
+     * @ORM\ManyToMany(targetEntity=Product::class, inversedBy="users")
      */
     private $favorite;
 
@@ -429,4 +429,5 @@ public function getUsername(): string
 
         return $this;
     }
+
 }
