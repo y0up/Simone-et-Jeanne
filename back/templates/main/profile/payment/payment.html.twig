@@ -3,6 +3,7 @@
 {% block title %}User Payment{% endblock %}
 
 {% block body %}
+{% include "main/profile/_menu.html.twig" %}
     <h1>Payment</h1>
     
     <a href="{{ path('payment_add', {'slug': user.slug}) }}">Add</a>

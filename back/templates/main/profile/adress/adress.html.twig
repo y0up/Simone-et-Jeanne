@@ -3,6 +3,7 @@
 {% block title %}User Adress{% endblock %}
 
 {% block body %}
+{% include "main/profile/_menu.html.twig" %}
     <h1>Adress</h1>
     
     <a href="{{ path('adress_add', {'slug': user.slug}) }}">Add</a>

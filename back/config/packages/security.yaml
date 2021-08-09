@@ -29,6 +29,12 @@ security:
                 # where to redirect after logout
                 # target: main/home.html.twig
 
+            remember_me:
+                secret:   '%kernel.secret%'
+                lifetime: 31536000 # 1 year in seconds
+                path:     /
+                secure: true
+
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#firewalls-authentication
 

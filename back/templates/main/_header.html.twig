@@ -1,4 +1,5 @@
 <header>
+    <a href="{{ path('home') }}">Acceuil</a>
     <a href="{{ path('new_product') }}">Nouveaute</a>
     {% for category in categories %}
     <a href="{{ path('cat_product', {'slug' : category.slug}) }}">{{category.name}}</a>
