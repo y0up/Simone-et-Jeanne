@@ -37,11 +37,13 @@ class HomeController extends AbstractController
      */
     public function index(ProductRepository $productRepository, CategoryRepository $categoryRepository): Response
     {
+        $user = $this->getUser();
         $categories = $categoryRepository->findAll();
         
         return $this->render('main/index.html.twig', [
             'products' => $productRepository->findAll(),
             'categories' => $categories,
+            'user' => $user,
         ]);
     }
 
@@ -50,21 +52,23 @@ class HomeController extends AbstractController
      */
     public function SearchByCat(Category $category, CategoryRepository $categoryRepository): Response
     {
+        $user = $this->getUser();
         $categories = $categoryRepository->findAll();
 
         return $this->render('main/index.html.twig', [
             'products' => $category->getProducts(),
             'categories' => $categories,
+            'user' => $user,
         ]);
     }
 
     /**
      * @Route("/product/{slug}", name="product_show", methods={"GET"})
      */
-    public function show(Product $product, Request $request): Response
+    public function show(Product $product, CategoryRepository $categoryRepository): Response
     {
         $user = $this->getUser();
-
+        $categories = $categoryRepository->findAll();
         $caracteristics = $product->getCaracteristic();
         $reviews = $product->getReviews();
         $categories = $product->getCategories();
@@ -76,6 +80,7 @@ class HomeController extends AbstractController
             'reviews' => $reviews,
             'randomProducts' => $randomProducts,
             'user' => $user,
+            'categories' => $categories,
         ]);
     }
 
@@ -84,6 +89,7 @@ class HomeController extends AbstractController
      */
     public function SearchByNew(ProductRepository $productRepository, CategoryRepository $categoryRepository): Response
     {
+        $user = $this->getUser();
         $categories = $categoryRepository->findAll();
         $products = $productRepository->findBy(
             ['new' => 'Yes']
@@ -91,6 +97,7 @@ class HomeController extends AbstractController
         return $this->render('main/index.html.twig', [
             'products' => $products,
             'categories' => $categories,
+            'user' => $user,
         ]);
     }
 

@@ -26,6 +26,7 @@
                 <td>{{ product.new ? 'Yes' : 'No' }}</td>
                 <td>
                     <a href="{{ path('product_show', {'slug': product.slug}) }}">show</a>
+                    <a href="{{ path('cart_add', {'slug': product.slug}) }}">Ajouter au panier</a>
                 </td>
             </tr>
         {% else %}
