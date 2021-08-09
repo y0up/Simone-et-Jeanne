@@ -9,12 +9,11 @@
 </style>
 
 <div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
-
-    This friendly message is coming from:
     <ul>
-        <li>Your controller at <code><a href="{{ 'C:/wamp64/www/Simone&Jeanne/Simone-et-Jeanne/back/src/Controller/CartController.php'|file_link(0) }}">src/Controller/CartController.php</a></code></li>
-        <li>Your template at <code><a href="{{ 'C:/wamp64/www/Simone&Jeanne/Simone-et-Jeanne/back/templates/cart/index.html.twig'|file_link(0) }}">templates/cart/index.html.twig</a></code></li>
+        {% for cartItem in cartItems %}
+        <li>{{cartItem.product.name}} {{ include('main/cart/_delete_form.html.twig') }} {{cartItem.quantity}}</li>
+        
+        {% endfor %}
     </ul>
 </div>
 {% endblock %}
