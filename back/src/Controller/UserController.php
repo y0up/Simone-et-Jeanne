@@ -12,15 +12,12 @@ use App\Form\ReviewType;
 use App\Form\PaymentType;
 use App\Entity\OrderDetail;
 use App\Form\ChangePasswordType;
-use App\Repository\UserRepository;
 use App\Repository\AdressRepository;
 use App\Repository\ReviewRepository;
 use App\Repository\PaymentRepository;
-use App\Repository\ProductRepository;
 use App\Repository\CategoryRepository;
 use App\Repository\OrderItemRepository;
 use App\Repository\OrderAdressRepository;
-use App\Repository\OrderDetailRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -308,7 +305,7 @@ class UserController extends AbstractController
     /**
      * @Route("/{slug}/command/{commandNumber}", name="command_show", methods={"GET"})
      */
-    public function show(OrderDetail $orderDetail, OrderAdressRepository $orderAdressRepository, OrderItemRepository $orderItemRepository, CategoryRepository $categoryRepository): Response
+    public function show(User $user, OrderDetail $orderDetail, OrderAdressRepository $orderAdressRepository, OrderItemRepository $orderItemRepository, CategoryRepository $categoryRepository): Response
     {
         $categories = $categoryRepository->findAll();
         $orderAdress = $orderAdressRepository->findOneBy([
@@ -325,6 +322,7 @@ class UserController extends AbstractController
             'orderAdress' => $orderAdress,
             'orderItems' => $orderItems,
             'categories' => $categories,
+            'user' => $user,
         ]);
     }
 
