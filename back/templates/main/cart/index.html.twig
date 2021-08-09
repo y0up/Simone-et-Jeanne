@@ -14,6 +14,8 @@
         <li>{{cartItem.product.name}} {{ include('main/cart/_delete_form.html.twig') }} {{cartItem.quantity}}</li>
         
         {% endfor %}
+
+        <button class="btn"><a href="{{ path('payment') }}">PAIEMENT</a></button>
     </ul>
 </div>
 {% endblock %}
