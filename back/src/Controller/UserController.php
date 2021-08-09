@@ -4,14 +4,17 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Entity\Adress;
+use App\Entity\Review;
 use App\Form\UserType;
 use App\Entity\Payment;
 use App\Form\AdressType;
+use App\Form\ReviewType;
 use App\Form\PaymentType;
 use App\Entity\OrderDetail;
 use App\Form\ChangePasswordType;
 use App\Repository\UserRepository;
 use App\Repository\AdressRepository;
+use App\Repository\ReviewRepository;
 use App\Repository\PaymentRepository;
 use App\Repository\ProductRepository;
 use App\Repository\CategoryRepository;
@@ -341,4 +344,94 @@ class UserController extends AbstractController
             'categories' => $categories,
         ]);
     }
+
+    // PAGE REVIEWS
+
+    /**
+     * @Route("/{slug}/review", name="user_review", methods={"GET"})
+     */
+    public function review(User $user, CategoryRepository $categoryRepository): Response
+    {
+        $categories = $categoryRepository->findAll();
+        $reviews = $user->getReviews();
+
+        return $this->render('main/profile/review/review.html.twig', [
+            'user' => $user,
+            'reviews' => $reviews,
+            'categories' => $categories,
+        ]);
+    }
+
+    /**
+     * @Route("/{slug}/review/edit", name="review_edit", methods={"GET","POST"})
+     */
+    public function reviewEdit(Request $request, User $user, Review $review, ReviewRepository $reviewRepository, CategoryRepository $categoryRepository): Response
+    {
+        $categories = $categoryRepository->findAll();
+        $reviews = $user->getReviews();
+        $review = $reviewRepository->findOneBy(['id' => $request->get('id')]);
+
+        $form = $this->createForm(ReviewType::class, $review);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->getDoctrine()->getManager()->flush();
+
+            return $this->redirectToRoute('user_review', ['slug' => $user->getSlug()], Response::HTTP_SEE_OTHER);
+        }
+
+        return $this->renderForm('main/profile/review/review.html.twig', [
+            'user' => $user,
+            'reviews' => $reviews,
+            'form' => $form,
+            'categories' => $categories,
+        ]);
+    }    
+
+    /**
+     * @Route("/{slug}/review/add", name="review_add", methods={"GET","POST"})
+     */
+    public function newReview(Request $request, User $user, CategoryRepository $categoryRepository): Response
+    {
+        $categories = $categoryRepository->findAll();
+        $reviews = $user->getReviews();
+
+        $review = new review();
+        $review->setUser($user);
+
+        $form = $this->createForm(ReviewType::class, $review);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($review);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('user_review', ['slug' => $user->getSlug()], Response::HTTP_SEE_OTHER);
+        }
+
+        return $this->renderForm('main/profile/review/review.html.twig', [
+            'user' => $user,
+            'reviews' => $reviews,
+            'form' => $form,
+            'categories' => $categories,
+        ]);
+    }
+
+    /**
+     * @Route("/{slug}/review/delete", name="review_delete", methods={"POST", "GET"})
+     */
+    public function reviewDelete(Request $request, User $user, ReviewRepository $reviewRepository, Review $review): Response
+    {
+        $review = $reviewRepository->findOneBy(['id' => $request->get('id')]);
+
+        if ($this->isCsrfTokenValid('delete'.$review->getId(), $request->request->get('_token'))) {
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->remove($review);
+            $entityManager->flush();
+        }
+
+        return $this->redirectToRoute('user_review', ['slug' => $user->getSlug()], Response::HTTP_SEE_OTHER);
+    }
+
 }

@@ -6,7 +6,7 @@
         <li><a href="{{path('user_info', {'slug': user.slug})}}">Informations</a></li>
         <li><a href="{{path('user_adress', {'slug': user.slug})}}">Adresses</a></li>
         <li><a href="{{path('user_payment', {'slug': user.slug})}}">Moyens de Paiements</a></li>
-        <li><a href="#">Avis</a></li>
+        <li><a href="{{path('user_review', {'slug': user.slug})}}">Avis</a></li>
         <hr>
         <li><a href="{{path('app_logout', {'slug': user.slug})}}">Déconnexion</a></li>
     </ul>
