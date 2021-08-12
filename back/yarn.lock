@@ -2878,6 +2878,11 @@ jest-worker@^27.0.2:
     merge-stream "^2.0.0"
     supports-color "^8.0.0"
 
+jquerry@^0.0.1-security:
+  version "0.0.1-security"
+  resolved "https://registry.yarnpkg.com/jquerry/-/jquerry-0.0.1-security.tgz#79cd20163981275f7de6984f6f5ce7b79b107264"
+  integrity sha512-6/x0OFGLte1tqTnInZ0foNjR/hCsNnfkNg7T1vxiCKSLObPbSF4EoswifsUdHiXBvQ/F60uILQGlfvjT0x3NSg==
+
 js-tokens@^4.0.0:
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/js-tokens/-/js-tokens-4.0.0.tgz#19203fb59991df98e3a287050d4647cdeaf32499"

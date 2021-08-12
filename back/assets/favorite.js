@@ -5,7 +5,6 @@ function onClickBtnFav(event) {
 
     const url = this.href;
     const icone = this.querySelector('svg');
-    console.log(icone.dataset.prefix);
 
     axios.get(url).then(function (response) {
 

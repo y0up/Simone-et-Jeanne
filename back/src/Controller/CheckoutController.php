@@ -5,17 +5,34 @@ namespace App\Controller;
 use Stripe\Price;
 use Stripe\Stripe;
 use Stripe\Product;
+use DateTimeImmutable;
+use App\Entity\OrderItem;
+use App\Entity\OrderAdress;
+use App\Entity\OrderDetail;
 use Stripe\Checkout\Session;
+use App\Entity\ShoppingSession;
 use App\Repository\CartItemRepository;
 use App\Repository\CategoryRepository;
+use App\Repository\ShippingRepository;
+use Doctrine\Persistence\ObjectManager;
+use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\ShoppingSessionRepository;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 class CheckoutController extends AbstractController
 {
+
+    public function __construct(RequestStack $requestStack)
+    {
+        $this->requestStack = $requestStack;
+    }
+
     /**
      * @Route("/payment", name="payment")
      */
@@ -31,13 +48,13 @@ class CheckoutController extends AbstractController
         ]);
     }
 
+
     /**
      * @Route("/checkout", name="checkout")
      */
-    public function checkout($stripeSK, ShoppingSessionRepository $shoppingSessionRepository, CartItemRepository $cartItemRepository): Response
+    public function checkout(Request $request, $stripeSK, ShoppingSessionRepository $shoppingSessionRepository, CartItemRepository $cartItemRepository): Response
     {
         $currency = 'eur';
-
         $user = $this->getUser();
 
         $shoppingSession = $shoppingSessionRepository->findOneBy([
@@ -67,23 +84,139 @@ class CheckoutController extends AbstractController
             'payment_method_types' => ['card'],
             'line_items' => $lineItems,
             'mode' => 'payment',
-            'success_url' => $this->generateUrl('success_url', [], UrlGeneratorInterface::ABSOLUTE_URL),
+            'success_url' => $this->generateUrl('success_url', ['shoppingSessionId' => $shoppingSession->getId()], UrlGeneratorInterface::ABSOLUTE_URL),
             'cancel_url' => $this->generateUrl('cancel_url', [], UrlGeneratorInterface::ABSOLUTE_URL),
           ]);
 
           return $this->redirect($session->url, 303);
     }
 
+    
     /**
-     * @Route("/success-url", name="success_url")
+     * @Route("/livraion/mondialrelay", name="mondialrelay")
      */
-    public function successUrl(): Response
+    public function mondialrealy(ShoppingSessionRepository $shoppingSessionRepository, ShippingRepository $shippingRepository, EntityManagerInterface $manager, Request $request): Response
     {
-
         $user = $this->getUser();
 
+        $datas = json_decode($request->getContent());
+        
+        $session = $this->requestStack->getSession();
 
-        return $this->redirectToRoute('command_show', ['slug' => $user->getSlug()], Response::HTTP_SEE_OTHER);
+        $session->set('data', $datas);
+        
+        $shoppingSession = $shoppingSessionRepository->findOneBy([
+            'user' => $user,
+        ]);
+        
+        $shipping = $shippingRepository->findOneBy([
+            'title' => 'mondialrelay',
+        ]);
+        
+        $shoppingSession->setShipping($shipping);
+        
+        $manager->persist($shoppingSession);
+        $manager->flush();
+
+
+        return $this->json(['message' => 'vous avez choisit la livraison en point relay.']);
+    }
+    
+    /**
+     * @Route("/livraion/workshop", name="workshop")
+     */
+    public function workshop(ShoppingSessionRepository $shoppingSessionRepository, ShippingRepository $shippingRepository, EntityManagerInterface $manager): Response
+    {
+        $user = $this->getUser();
+        
+        $shoppingSession = $shoppingSessionRepository->findOneBy([
+            'user' => $user,
+        ]);
+        
+        $shipping = $shippingRepository->findOneBy([
+            'title' => 'atelier',
+        ]);
+        
+        $shoppingSession->setShipping($shipping);
+        
+        $manager->persist($shoppingSession);
+        $manager->flush();
+        
+        return $this->json(['message' => 'vous avez choisit latelier.']);
+    }
+
+    /**
+     * @Route("/success-url", name="success_url", methods={"GET", "POST"})
+     */
+    public function successUrl(ShoppingSessionRepository $shoppingSessionRepository, Request $request, CartItemRepository $cartItemRepository, EntityManagerInterface $manager): Response
+    {
+        $user = $this->getUser();
+        $session = $this->requestStack->getSession();
+        $dataAdress = $session->get('data');
+        
+        dump($dataAdress);
+        
+        $shoppingSession = $shoppingSessionRepository->findOneBy([
+            'id' => $request->query->get('shoppingSessionId'),
+        ]);
+
+        $cartItems = $cartItemRepository->findBy([
+            'shoppingSession' => $shoppingSession,
+        ]);
+        
+        $orderDetail = new OrderDetail();
+        $orderDetail->setTotal($shoppingSession->getTotal());
+        $orderDetail->setShippingPrice(($shoppingSession->getShipping())->getPrice());
+        $orderDetail->setStatus(0);
+        $orderDetail->setCommandNumber(date("Ymd")."00".($shoppingSession->getId()));
+        $orderDetail->setUser($user);
+        $orderDetail->setShippingChoice(($shoppingSession->getShipping())->gettitle());
+
+        $orderAdress = new OrderAdress();
+        $orderAdress->setOrderDetail($orderDetail);
+        if ($orderDetail->getShippingChoice() == 'atelier') {
+            $orderAdress->setName('SIMONEETJEANNE');
+            $orderAdress->setLine1('15 rue Descartes');
+            $orderAdress->setCity('BORDEAUX');
+            $orderAdress->setPostalCode('33000');
+            $orderAdress->setCountry('France');
+            $orderAdress->setStatus('adresse de livraison');
+            $date = new DateTimeImmutable('Y-m-d H:i:s');
+            $orderAdress->setCreatedAt($date);
+        } elseif ($orderDetail->getShippingChoice() == 'mondialrelay') {
+            $orderAdress->setName($dataAdress->Nom);
+            $orderAdress->setLine1($dataAdress->Adresse1);
+            $orderAdress->setCity($dataAdress->Ville);
+            $orderAdress->setPostalCode($dataAdress->CP);
+            $orderAdress->setCountry($dataAdress->Pays);
+            $orderAdress->setStatus('adresse de livraison');
+            $date = new DateTimeImmutable();
+            $orderAdress->setCreatedAt($date);
+        }
+
+        foreach ($cartItems as $cartItem) {
+            $orderItem = new OrderItem();
+
+            $orderItem->setOrderDetail($orderDetail);
+            $orderItem->setProduct($cartItem->getProduct());
+            $orderItem->setQuantity($cartItem->getQuantity());
+            $manager->persist($orderItem);
+        }
+
+        
+        $manager->persist($orderAdress);
+        $manager->persist($orderDetail);
+        $manager->remove($shoppingSession);
+        $manager->flush();
+       
+
+
+        if ($user == true) {
+            return $this->redirectToRoute('command_show', ['slug' => $user->getSlug(), 'commandNumber' => $orderDetail->getCommandNumber()], Response::HTTP_SEE_OTHER);
+            
+        }
+        return $this->redirectToRoute('command_show', ['slug' => $user->getSlug(), 'commandNumber' => $orderDetail->getCommandNumber()], Response::HTTP_SEE_OTHER);
+
     }
 
     /**
@@ -95,3 +228,6 @@ class CheckoutController extends AbstractController
         return $this->redirectToRoute('cart_index', ['slug' => $user->getSlug()], Response::HTTP_SEE_OTHER);
     }
 }
+
+
+

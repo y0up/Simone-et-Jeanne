@@ -4,8 +4,54 @@
 
 {% block body %}
 
-<form action="{{ path('checkout') }}" method="POST">
+
+ <a href="{{ path('mondialrelay') }}" class="shippingChoice" id="relayChoice">en point relay</a>
+ <a href="{{ path('workshop') }}" class="shippingChoice" id="bordeauxChoice">a l'atelier</a>
+<div id="relay" class="visible">
+  <h3>En point relais</h3>
+  <div id="Zone_Widget"></div>
+  <input type="text" id="ParcelShopCode">
+  <hr>
+  <h4>Adresse de livraison:</h4>
+  <p id="relayName"></p>
+  <p id="relayAdress1"></p>
+  <p id="relayAdress2"></p>
+  <p id="relayCp"></p>
+  <p id="relayCity"></p>
+  <p id="relayCountry"></p>
+  
+</div>
+
+<div class="hidden" id="bordeaux"><h3>Livraison a domicile presque</h3></div>
+
+<pre>
+  {{ dump(app.request) }}
+</pre>
+{% set dataAdress = app.session %}
+
+{{ dump(dataAdress) }}
+
+<form action="{{ path('checkout', {'dataAdress': dataAdress}) }}" >
     <button type="submit">Checkout</button>
   </form>
+
+  
+
+{% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+
+<!--On charge Jquery depuis le CDN de google-->  
+<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>  
+  
+<!-- Charger Leaflet pour l'affichage de la map-->  
+<script type="text/javascript" src="//unpkg.com/leaflet/dist/leaflet.js"></script>  
+<link rel="stylesheet" type="text/css" href="//unpkg.com/leaflet/dist/leaflet.css" />  
+  
+ <!--On charge le widget mondial relay depuis leurs serveurs-->  
+<script type="text/javascript" src="https://widget.mondialrelay.com/parcelshop-picker/jquery.plugin.mondialrelay.parcelshoppicker.min.js"></script>  
+
+{{ encore_entry_script_tags('shipping') }}
 
 {% endblock %}
