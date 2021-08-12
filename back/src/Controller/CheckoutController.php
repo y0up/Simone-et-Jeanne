@@ -10,19 +10,17 @@ use App\Entity\OrderItem;
 use App\Entity\OrderAdress;
 use App\Entity\OrderDetail;
 use Stripe\Checkout\Session;
-use App\Entity\ShoppingSession;
 use App\Repository\CartItemRepository;
 use App\Repository\CategoryRepository;
 use App\Repository\ShippingRepository;
-use Doctrine\Persistence\ObjectManager;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\ShoppingSessionRepository;
+use Doctrine\ORM\Query\AST\OrderByItem;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 class CheckoutController extends AbstractController
@@ -52,7 +50,7 @@ class CheckoutController extends AbstractController
     /**
      * @Route("/checkout", name="checkout")
      */
-    public function checkout(Request $request, $stripeSK, ShoppingSessionRepository $shoppingSessionRepository, CartItemRepository $cartItemRepository): Response
+    public function checkout($stripeSK, ShoppingSessionRepository $shoppingSessionRepository, CartItemRepository $cartItemRepository): Response
     {
         $currency = 'eur';
         $user = $this->getUser();
@@ -201,9 +199,14 @@ class CheckoutController extends AbstractController
             $orderItem->setProduct($cartItem->getProduct());
             $orderItem->setQuantity($cartItem->getQuantity());
             $manager->persist($orderItem);
+            $inventory = $orderItem->getProduct()->getInventory();
+            $newInventoryQuantity = ($inventory->getQuantity())+($orderItem->getQuantity()); 
+            $inventory->setQuantity($newInventoryQuantity);
+            $manager->persist($inventory);
+
         }
 
-        
+
         $manager->persist($orderAdress);
         $manager->persist($orderDetail);
         $manager->remove($shoppingSession);
