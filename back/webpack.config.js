@@ -23,6 +23,7 @@ Encore
     .addEntry('app', './assets/app.js')
     .addEntry('fav', './assets/favorite.js')
     .addEntry('shipping', './assets/shipping.js')
+    .addEntry('addToCart', './assets/addToCart.js')
 
     // enables the Symfony UX Stimulus bridge (used in assets/bootstrap.js)
     .enableStimulusBridge('./assets/controllers.json')

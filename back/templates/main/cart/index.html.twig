@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello CartController!{% endblock %}
+{% block title %}Panier{% endblock %}
 
 {% block body %}
 <style>
@@ -9,13 +9,27 @@
 </style>
 
 <div class="example-wrapper">
+    {% if cartItems %}
     <ul>
         {% for cartItem in cartItems %}
-        <li>{{cartItem.product.name}} {{ include('main/cart/_delete_form.html.twig') }} {{cartItem.quantity}}</li>
+        <li>
+            <img src="{{ cartItem.product.images[0].name }}" alt="" />
+            <br>
+            {{cartItem.product.name}}
+            <br>
+            {{cartItem.quantity}}
+            <br>
+            {{ include('main/cart/_delete_form.html.twig') }}
+        </li>
         
         {% endfor %}
 
         <button class="btn"><a href="{{ path('payment') }}">PAIEMENT</a></button>
     </ul>
+    {% else %}
+    Votre panier est vide!
+    {% endif %}
 </div>
 {% endblock %}
+
+

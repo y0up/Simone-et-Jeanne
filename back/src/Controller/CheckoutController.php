@@ -15,7 +15,6 @@ use App\Repository\CategoryRepository;
 use App\Repository\ShippingRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\ShoppingSessionRepository;
-use Doctrine\ORM\Query\AST\OrderByItem;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -38,6 +37,7 @@ class CheckoutController extends AbstractController
     {
         $categories = $categoryRepository->findAll();
         $user = $this->getUser();
+        dump($this->requestStack->getSession());
         
         return $this->render('main/checkout/payment.html.twig', [
             'controller_name' => 'CheckoutController',
@@ -55,19 +55,30 @@ class CheckoutController extends AbstractController
         $currency = 'eur';
         $user = $this->getUser();
 
-        $shoppingSession = $shoppingSessionRepository->findOneBy([
-            'user' => $user,
-        ]);
-        $cartItems = $cartItemRepository->findBy([
-            'shoppingSession' => $shoppingSession,
-        ]);
+        if ($user) {
+            $shoppingSession = $shoppingSessionRepository->findOneBy([
+                'user' => $user,
+            ]);
+            $cartItems = $cartItemRepository->findBy([
+                'shoppingSession' => $shoppingSession,
+            ]);
+        } else {
+            $shoppingSession = $shoppingSessionRepository->findOneBy([
+                'id' => $this->requestStack->getSession()->get('shoppingSession'),
+            ]);
+            $cartItems = $cartItemRepository->findBy([
+                'shoppingSession' => $shoppingSession,
+            ]);
+        }
         
 
         Stripe::setApiKey($stripeSK);
 
         foreach ($cartItems as $cartItem) {
+            $cartItemImage = $cartItem->getProduct()->getimages()[0]->getName();
             $stripeProduct = Product::create([
                 'name' => $cartItem->getProduct()->getName(),
+                'images' => [$cartItemImage],
             ]);
 
             $stripePrice = Price::create([
@@ -96,13 +107,29 @@ class CheckoutController extends AbstractController
     public function mondialrealy(ShoppingSessionRepository $shoppingSessionRepository, ShippingRepository $shippingRepository, EntityManagerInterface $manager, Request $request): Response
     {
         $user = $this->getUser();
-
         $datas = json_decode($request->getContent());
         
         $session = $this->requestStack->getSession();
-
         $session->set('data', $datas);
         
+        if ($user) {
+            $shoppingSession = $shoppingSessionRepository->findOneBy([
+                'user' => $user,
+            ]);
+            
+            $shipping = $shippingRepository->findOneBy([
+                'title' => 'mondialrelay',
+            ]);
+        } else {
+            $shoppingSession = $shoppingSessionRepository->findOneBy([
+                'id' => $this->requestStack->getSession()->get('shoppingSession'),
+            ]);
+            
+            $shipping = $shippingRepository->findOneBy([
+                'title' => 'mondialrelay',
+            ]);
+        }
+
         $shoppingSession = $shoppingSessionRepository->findOneBy([
             'user' => $user,
         ]);
@@ -127,13 +154,24 @@ class CheckoutController extends AbstractController
     {
         $user = $this->getUser();
         
-        $shoppingSession = $shoppingSessionRepository->findOneBy([
-            'user' => $user,
-        ]);
-        
-        $shipping = $shippingRepository->findOneBy([
-            'title' => 'atelier',
-        ]);
+        if ($user) {
+            $shoppingSession = $shoppingSessionRepository->findOneBy([
+                'user' => $user,
+            ]);
+            
+            $shipping = $shippingRepository->findOneBy([
+                'title' => 'atelier',
+            ]);
+        } else {
+            $shoppingSession = $shoppingSessionRepository->findOneBy([
+                'id' => $this->requestStack->getSession()->get('shoppingSession'),
+            ]);
+            
+            $shipping = $shippingRepository->findOneBy([
+                'title' => 'atelier',
+            ]);
+        }
+
         
         $shoppingSession->setShipping($shipping);
         
@@ -152,7 +190,6 @@ class CheckoutController extends AbstractController
         $session = $this->requestStack->getSession();
         $dataAdress = $session->get('data');
         
-        dump($dataAdress);
         
         $shoppingSession = $shoppingSessionRepository->findOneBy([
             'id' => $request->query->get('shoppingSessionId'),
@@ -179,7 +216,7 @@ class CheckoutController extends AbstractController
             $orderAdress->setPostalCode('33000');
             $orderAdress->setCountry('France');
             $orderAdress->setStatus('adresse de livraison');
-            $date = new DateTimeImmutable('Y-m-d H:i:s');
+            $date = new DateTimeImmutable();
             $orderAdress->setCreatedAt($date);
         } elseif ($orderDetail->getShippingChoice() == 'mondialrelay') {
             $orderAdress->setName($dataAdress->Nom);
@@ -206,19 +243,22 @@ class CheckoutController extends AbstractController
 
         }
 
-
+        dump($session);
         $manager->persist($orderAdress);
         $manager->persist($orderDetail);
         $manager->remove($shoppingSession);
         $manager->flush();
-       
+
+        $session->remove('data');
+        $session->remove('shoppingSession');
+        dump($session);
 
 
         if ($user == true) {
             return $this->redirectToRoute('command_show', ['slug' => $user->getSlug(), 'commandNumber' => $orderDetail->getCommandNumber()], Response::HTTP_SEE_OTHER);
             
         }
-        return $this->redirectToRoute('command_show', ['slug' => $user->getSlug(), 'commandNumber' => $orderDetail->getCommandNumber()], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('home', [], Response::HTTP_SEE_OTHER);
 
     }
 

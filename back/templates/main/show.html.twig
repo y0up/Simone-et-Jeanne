@@ -8,6 +8,13 @@
     <table class="table">
         <tbody>
             <tr>
+                <th>images</th>
+                {% for image in product.images %}
+                <td> <img src="{{ image.name }}" alt=""> </td>
+                    
+                {% endfor %}
+            </tr>
+            <tr>
                 <th>Name</th>
                 <td>{{ product.name }}</td>
             </tr>
@@ -52,38 +59,51 @@
                 </tr>
             </tr>
 
+            <a class="addToCart" href="{{ path('cart_add', {'slug': product.slug}) }}">Ajouter au panier</a>
+            
+            
             <tr>
                 {% for review in reviews %}
                 <tr>
-                <th>{{ review.title }}</th>
-                <td>{{ review.rate }}</td>
-                <td>{{ review.content }}</td>
-                <td>{{ review.user.firstName }}</td>
-                <td>{{ review.createdAt|date("d/F/Y") }}</td>
+                    <th>{{ review.title }}</th>
+                    <td>{{ review.rate }}</td>
+                    <td>{{ review.content }}</td>
+                    <td>{{ review.user.firstName }}</td>
+                    <td>{{ review.createdAt|date("d/F/Y") }}</td>
                 </tr>
                 {% endfor %}
             </tr>
             <tr>
                 {% for randomProduct in randomProducts [:4] %}
                 <td>name</td>
-                    <th>{{ randomProduct.name }}</th>
+                <th>{{ randomProduct.name }}</th>
                 {% endfor %}
             </tr>
-
+            
         </tbody>
     </table>
+    
+    {% if user %}
     <a href="{{ path('favorite', {'productId' : product.id}) }}" class="js-fav">
         {% if product.likedByUser(user) %}
-            <i class="fas fa-heart"></i>
+        <i class="fas fa-heart"></i>
         {% else %}
-            <i class="far fa-heart"></i>
+        <i class="far fa-heart"></i>
         {% endif %}
-        </a>
-
-
-{% endblock %}
-
-{% block javascripts %}
-     {{ parent() }}
-     {{ encore_entry_script_tags('fav') }}
-{% endblock %}
+    </a>
+    {% else %}
+    <a href="{{ path('app_login') }}">
+        <i class="far fa-heart"></i>
+    </a>
+    {% endif %}
+    
+    
+    
+    
+    {% endblock %}
+    
+    {% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('fav') }}
+    {{ encore_entry_script_tags('addToCart') }}
+    {% endblock %}

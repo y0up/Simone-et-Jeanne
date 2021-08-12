@@ -19,6 +19,7 @@ use App\Entity\Caracteristic;
 use App\Entity\PaymentDetail;
 use App\Entity\ShoppingSession;
 use App\Entity\CaracteristicDetail;
+use App\Entity\Image;
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Symfony\Component\String\Slugger\SluggerInterface;
@@ -111,6 +112,13 @@ class AppFixtures extends Fixture
             $product->setNew($faker->boolean($chanceOfGettingTrue = 25));
             $product->setSlug(strtolower($this->slugger->slug($product->getName())));
             $productList[] = $product;
+
+            for ($j=0; $j < 3; $j++) { 
+                $image = new Image();
+                $image->setName($faker->imageUrl($width = 640, $height = 480));
+                $image->setProduct($product);
+                $manager->persist($image);
+            }
             
             $manager->persist($product);
         }

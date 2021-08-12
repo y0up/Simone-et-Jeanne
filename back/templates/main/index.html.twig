@@ -8,6 +8,7 @@
     <table class="table">
         <thead>
             <tr>
+                <th>Image</th>
                 <th>Name</th>
                 <th>Description</th>
                 <th>SKU</th>
@@ -19,6 +20,7 @@
         <tbody>
         {% for product in products %}
             <tr>
+                <td><img src="{{ product.images[0].name }}" alt=""></td>
                 <td>{{ product.name }}</td>
                 <td>{{ product.description }}</td>
                 <td>{{ product.SKU }}</td>
@@ -26,7 +28,7 @@
                 <td>{{ product.new ? 'Yes' : 'No' }}</td>
                 <td>
                     <a href="{{ path('product_show', {'slug': product.slug}) }}">show</a>
-                    <a href="{{ path('cart_add', {'slug': product.slug}) }}">Ajouter au panier</a>
+                    <a class="addToCart" href="{{ path('cart_add', {'slug': product.slug}) }}">Ajouter au panier</a>
                 </td>
             </tr>
         {% else %}
@@ -36,5 +38,11 @@
         {% endfor %}
         </tbody>
     </table>
+
+{% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+{{ encore_entry_script_tags('addToCart') }}
 
 {% endblock %}
