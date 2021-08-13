@@ -125,6 +125,18 @@ class AppFixtures extends Fixture
 
         $randomProductObject = $faker->randomElement($productList);
 
+
+        // Create admin user
+        $user = new User();            
+        $user->setEmail('simoneetjeanne@gmail.com');
+        $user->setRoles(['ROLE_ADMIN']);
+        $user->setPassword($this->passwordHasher->hashPassword($user, 'GirlBossSJ33'));
+        $user->setFirstName('Alexia');
+        $user->setLastName('Deschamps');
+        $user->setSlug(strtolower($this->slugger->slug($user->getfirstName(), '-', $user->getLastName())));
+        $user->setDateOfBirth(new \DateTime('20-01-1992'));
+        $manager->persist($user);
+
         for ($i=0; $i < 100; $i++) { 
             $randomNumber = $faker->numberBetween($min = 1, $max = 3);
             $user = new User();
