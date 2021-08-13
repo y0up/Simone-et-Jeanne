@@ -24,12 +24,7 @@
 
 <div class="hidden" id="bordeaux"><h3>Livraison a domicile presque</h3></div>
 
-<pre>
-  {{ dump(app.request) }}
-</pre>
 {% set dataAdress = app.session %}
-
-{{ dump(dataAdress) }}
 
 <form action="{{ path('checkout', {'dataAdress': dataAdress}) }}" >
     <button type="submit">Checkout</button>

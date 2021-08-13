@@ -69,7 +69,6 @@ class CartController extends AbstractController
             $shoppingSession = $shoppingSessionRepository->findOneBy([
                 'user' => $user,
             ]);
-            dump($shoppingSession);
             $cartItem = $cartItemRepository->findOneBy([
                 'shoppingSession' => $shoppingSession,
                 'product' => $product,

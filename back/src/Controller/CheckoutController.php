@@ -37,7 +37,6 @@ class CheckoutController extends AbstractController
     {
         $categories = $categoryRepository->findAll();
         $user = $this->getUser();
-        dump($this->requestStack->getSession());
         
         return $this->render('main/checkout/payment.html.twig', [
             'controller_name' => 'CheckoutController',
@@ -243,7 +242,6 @@ class CheckoutController extends AbstractController
 
         }
 
-        dump($session);
         $manager->persist($orderAdress);
         $manager->persist($orderDetail);
         $manager->remove($shoppingSession);
@@ -251,7 +249,7 @@ class CheckoutController extends AbstractController
 
         $session->remove('data');
         $session->remove('shoppingSession');
-        dump($session);
+
 
 
         if ($user == true) {

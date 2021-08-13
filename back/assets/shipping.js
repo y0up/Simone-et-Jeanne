@@ -20,7 +20,6 @@
             document.getElementById("relayCountry").innerHTML = data.Pays;
             
             axios.post(url, data).then(function (response) {
-              console.log(response);
             })
         },
     }); 
@@ -35,7 +34,6 @@ function onClickShippingChoice(event) {
   const url = this.href;
 
   axios.get(url).then(function (response) {
-    console.log(response);
 });
 
   if (link == 'relayChoice') {
