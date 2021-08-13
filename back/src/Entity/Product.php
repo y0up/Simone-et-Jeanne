@@ -50,11 +50,6 @@ class Product
     private $updatedAt;
 
     /**
-     * @ORM\Column(type="datetime", nullable=true)
-     */
-    private $deletedAt;
-
-    /**
      * @ORM\OneToOne(targetEntity=Inventory::class, inversedBy="product", cascade={"persist", "remove"})
      */
     private $inventory;
@@ -105,7 +100,7 @@ class Product
     private $brand;
 
     /**
-     * @ORM\OneToMany(targetEntity=Image::class, mappedBy="product", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity=Image::class, mappedBy="product", cascade={"persist"}, orphanRemoval=true)
      */
     private $images;
 
@@ -197,18 +192,6 @@ class Product
     public function setUpdatedAt(?\DateTimeInterface $updatedAt): self
     {
         $this->updatedAt = $updatedAt;
-
-        return $this;
-    }
-
-    public function getDeletedAt(): ?\DateTimeInterface
-    {
-        return $this->deletedAt;
-    }
-
-    public function setDeletedAt(?\DateTimeInterface $deletedAt): self
-    {
-        $this->deletedAt = $deletedAt;
 
         return $this;
     }

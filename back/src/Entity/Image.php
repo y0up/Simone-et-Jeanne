@@ -2,11 +2,14 @@
 
 namespace App\Entity;
 
-use App\Repository\ImageRepository;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\ImageRepository;
+use Symfony\Component\HttpFoundation\File\File;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 /**
  * @ORM\Entity(repositoryClass=ImageRepository::class)
+ * @Vich\Uploadable
  */
 class Image
 {
@@ -27,6 +30,17 @@ class Image
      * @ORM\JoinColumn(nullable=false)
      */
     private $product;
+
+    /**
+     *@Vich\UploadableField(mapping="product_images", fileNameProperty="name")
+     * @var File
+     */
+    private $imageFile;
+
+    public function __toString()
+    {
+        return (string) $this->name;
+    }
 
     public function getId(): ?int
     {
@@ -53,6 +67,21 @@ class Image
     public function setProduct(?Product $product): self
     {
         $this->product = $product;
+
+        return $this;
+    }
+
+    public function getImageFile()
+    {
+        return $this->imageFile;
+    }
+
+    public function setImageFile(File $name = null)
+    {
+        $this->imageFile = $name;
+        if ($name) {
+            $this->updatedAt= new \DateTime();
+        }
 
         return $this;
     }
