@@ -50,11 +50,6 @@ class Product
     private $updatedAt;
 
     /**
-     * @ORM\OneToOne(targetEntity=Inventory::class, inversedBy="product", cascade={"persist", "remove"})
-     */
-    private $inventory;
-
-    /**
      * @ORM\OneToMany(targetEntity=Review::class, mappedBy="product", orphanRemoval=true)
      */
     private $reviews;
@@ -104,6 +99,16 @@ class Product
      */
     private $images;
 
+    /**
+     * @ORM\ManyToMany(targetEntity=CaracteristicDetail::class, inversedBy="products")
+     */
+    private $caracteristicDetails;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $quantity;
+
     public function __construct()
     {
         $this->reviews = new ArrayCollection();
@@ -112,6 +117,7 @@ class Product
         $this->cartItems = new ArrayCollection();
         $this->users = new ArrayCollection();
         $this->images = new ArrayCollection();
+        $this->caracteristicDetails = new ArrayCollection();
     }
 
     public function __toString()
@@ -192,18 +198,6 @@ class Product
     public function setUpdatedAt(?\DateTimeInterface $updatedAt): self
     {
         $this->updatedAt = $updatedAt;
-
-        return $this;
-    }
-
-    public function getInventory(): ?Inventory
-    {
-        return $this->inventory;
-    }
-
-    public function setInventory(?Inventory $inventory): self
-    {
-        $this->inventory = $inventory;
 
         return $this;
     }
@@ -442,6 +436,42 @@ class Product
                 $image->setProduct(null);
             }
         }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|CaracteristicDetail[]
+     */
+    public function getCaracteristicDetails(): Collection
+    {
+        return $this->caracteristicDetails;
+    }
+
+    public function addCaracteristicDetail(CaracteristicDetail $caracteristicDetail): self
+    {
+        if (!$this->caracteristicDetails->contains($caracteristicDetail)) {
+            $this->caracteristicDetails[] = $caracteristicDetail;
+        }
+
+        return $this;
+    }
+
+    public function removeCaracteristicDetail(CaracteristicDetail $caracteristicDetail): self
+    {
+        $this->caracteristicDetails->removeElement($caracteristicDetail);
+
+        return $this;
+    }
+
+    public function getQuantity(): ?int
+    {
+        return $this->quantity;
+    }
+
+    public function setQuantity(?int $quantity): self
+    {
+        $this->quantity = $quantity;
 
         return $this;
     }

@@ -4,18 +4,17 @@ namespace App\Controller\Admin;
 
 use App\Entity\Product;
 use App\Form\ImageType;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\ImageField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\MoneyField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\CollectionField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
-use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
-use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
+use EasyCorp\Bundle\EasyAdminBundle\Field\IntegerField;
 
 class ProductCrudController extends AbstractCrudController
 {
@@ -40,6 +39,10 @@ class ProductCrudController extends AbstractCrudController
                 ->setTemplatePath('admin/images.html.twig')
                 ->onlyOnDetail(),
             AssociationField::new('categories'),
+            AssociationField::new('caracteristic'),
+            AssociationField::new('caracteristicDetails'),
+            IntegerField::new('quantity'),
+
         ];
     }
 

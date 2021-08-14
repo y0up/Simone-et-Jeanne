@@ -11,7 +11,6 @@ use App\Entity\Product;
 use App\Entity\CartItem;
 use App\Entity\Category;
 use App\Entity\Shipping;
-use App\Entity\Inventory;
 use App\Entity\OrderItem;
 use App\Entity\OrderAdress;
 use App\Entity\OrderDetail;
@@ -93,20 +92,12 @@ class AppFixtures extends Fixture
         }
 
         for ($i=0; $i < 20; $i++) { 
-            $inventory = new Inventory();
-
-            $inventory->setQuantity($faker->numberBetween($min = 0, $max = 1000));
-
-            $manager->persist($inventory);
-
             $product = new Product();
-
-
             $product->setName($faker->word);
             $product->setBrand($faker->company);
             $product->setDescription($faker->text);
             $product->setPrice($faker->randomFloat($nbMaxDecimals = 2, $min = 15, $max = 100));
-            $product->setInventory($inventory);
+            $product->setQuantity($faker->numberBetween($min = 0, $max = 1000));
             $product->addCategory($faker->randomElement($categoryList));
             $product->addCaracteristic($faker->randomElement($caracteristicList));
             $product->setNew($faker->boolean($chanceOfGettingTrue = 25));

@@ -17,7 +17,6 @@ class ProductType extends AbstractType
             ->add('SKU')
             ->add('price')
             ->add('new')
-            ->add('inventory')
             ->add('caracteristic')
             ->add('categories')
         ;

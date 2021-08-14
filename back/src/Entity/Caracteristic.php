@@ -44,6 +44,11 @@ class Caracteristic
      */
     private $caracteristicDetail;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $content;
+
     public function __construct()
     {
         $this->products = new ArrayCollection();
@@ -149,6 +154,18 @@ class Caracteristic
                 $caracteristicDetail->setCaracteristic(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getContent(): ?string
+    {
+        return $this->content;
+    }
+
+    public function setContent(?string $content): self
+    {
+        $this->content = $content;
 
         return $this;
     }

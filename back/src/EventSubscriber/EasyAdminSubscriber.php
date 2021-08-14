@@ -2,6 +2,10 @@
 
 namespace App\EventSubscriber;
 
+use App\Entity\Caracteristic;
+use App\Entity\CaracteristicDetail;
+use App\Entity\Category;
+use App\Entity\OrderDetail;
 use App\Entity\Product;
 use DateTime;
 use Symfony\Component\String\Slugger\SluggerInterface;
@@ -28,12 +32,14 @@ class EasyAdminSubscriber implements EventSubscriberInterface
     {
         $entity = $event->getEntityInstance();
         
-        if (!($entity instanceof Product)) {
+        if (!($entity instanceof Product || $entity instanceof Category || $entity instanceof CaracteristicDetail || $entity instanceof Caracteristic || $entity instanceof OrderDetail)) {
             return;
         }
         
-        $slug = $this->slugger->slug($entity->getName());
-        $entity->setSlug($slug);
+        if ($entity instanceof Product || $entity instanceof Category) {
+            $slug = $this->slugger->slug($entity->getName());
+            $entity->setSlug($slug);
+        }
 
         $now = new DateTime('now');
         $entity->setCreatedAt($now);

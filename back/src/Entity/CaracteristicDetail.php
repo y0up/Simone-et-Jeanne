@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\CaracteristicDetailRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -41,6 +43,21 @@ class CaracteristicDetail
      * @ORM\ManyToOne(targetEntity=Caracteristic::class, inversedBy="caracteristicDetail")
      */
     private $caracteristic;
+
+    /**
+     * @ORM\ManyToMany(targetEntity=Product::class, mappedBy="caracteristicDetails")
+     */
+    private $products;
+
+    public function __construct()
+    {
+        $this->products = new ArrayCollection();
+    }
+
+    public function __toString()
+    {
+        return (string) $this->name;
+    }
 
     public function getId(): ?int
     {
@@ -103,6 +120,33 @@ class CaracteristicDetail
     public function setCaracteristic(?Caracteristic $caracteristic): self
     {
         $this->caracteristic = $caracteristic;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Product[]
+     */
+    public function getProducts(): Collection
+    {
+        return $this->products;
+    }
+
+    public function addProduct(Product $product): self
+    {
+        if (!$this->products->contains($product)) {
+            $this->products[] = $product;
+            $product->addCaracteristicDetail($this);
+        }
+
+        return $this;
+    }
+
+    public function removeProduct(Product $product): self
+    {
+        if ($this->products->removeElement($product)) {
+            $product->removeCaracteristicDetail($this);
+        }
 
         return $this;
     }

@@ -76,13 +76,11 @@ class Image
         return $this->imageFile;
     }
 
-    public function setImageFile(File $name = null)
+    public function setImageFile(File $imageFile): void
     {
-        $this->imageFile = $name;
-        if ($name) {
+        $this->imageFile = $imageFile;
+        if ($imageFile) {
             $this->updatedAt= new \DateTime();
         }
-
-        return $this;
     }
 }

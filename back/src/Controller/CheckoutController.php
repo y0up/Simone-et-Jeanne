@@ -229,16 +229,18 @@ class CheckoutController extends AbstractController
         }
 
         foreach ($cartItems as $cartItem) {
-            $orderItem = new OrderItem();
+            $product = $cartItem->getProduct();
 
+            $orderItem = new OrderItem();
             $orderItem->setOrderDetail($orderDetail);
-            $orderItem->setProduct($cartItem->getProduct());
+            $orderItem->setProduct($product);
             $orderItem->setQuantity($cartItem->getQuantity());
             $manager->persist($orderItem);
-            $inventory = $orderItem->getProduct()->getInventory();
-            $newInventoryQuantity = ($inventory->getQuantity())+($orderItem->getQuantity()); 
-            $inventory->setQuantity($newInventoryQuantity);
-            $manager->persist($inventory);
+
+            $newQuantity = (($product->getQuantity())-($orderItem->getQuantity()));
+            $product->setQuantity($newQuantity);
+            $manager->persist($product);
+            
 
         }
 
