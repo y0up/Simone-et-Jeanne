@@ -30,6 +30,7 @@ class ProductCrudController extends AbstractCrudController
             TextareaField::new('description'),
             DateField::new('createdAt')->hideOnForm(),
             MoneyField::new('price')->setCurrency('EUR'),
+            TextField::new('brand'),
             BooleanField::new('new'),
             CollectionField::new('images')
                 ->setEntryType(ImageType::class)

@@ -19,12 +19,15 @@
         </thead>
         <tbody>
         {% for product in products %}
+        <pre>
+            {{ dump(product.images[0].name) }}
+        </pre>
             <tr>
-                <td><img src="{{ product.images[0].name }}" alt=""></td>
+                <td><img src="{{ image_path }}{{ product.images[0].name }}" alt=""></td>
                 <td>{{ product.name }}</td>
                 <td>{{ product.description }}</td>
                 <td>{{ product.SKU }}</td>
-                <td>{{ product.price }}</td>
+                <td>{{ product.price / 100}} €</td>
                 <td>{{ product.new ? 'Yes' : 'No' }}</td>
                 <td>
                     <a href="{{ path('product_show', {'slug': product.slug}) }}">show</a>
@@ -34,7 +37,7 @@
         {% else %}
             <tr>
                 <td colspan="10">no records found</td>
-            </tr>
+            </tr>  
         {% endfor %}
         </tbody>
     </table>

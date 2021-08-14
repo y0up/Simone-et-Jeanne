@@ -1,105 +1,79 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Product{% endblock %}
+{% block title %}{{product.name}}{% endblock %}
 
 {% block body %}
-    <h1>Product</h1>
 
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>images</th>
-                {% for image in product.images %}
-                <td> <img src="{{ image.name }}" alt=""> </td>
-                    
-                {% endfor %}
-            </tr>
-            <tr>
-                <th>Name</th>
-                <td>{{ product.name }}</td>
-            </tr>
-            <tr>
-                <th>Description</th>
-                <td>{{ product.description }}</td>
-            </tr>
-            <tr>
-                <th>SKU</th>
-                <td>{{ product.SKU }}</td>
-            </tr>
-            <tr>
-                <th>Price</th>
-                <td>{{ product.price }}</td>
-            </tr>
-            <tr>
-                <th>New</th>
-                <td>{{ product.new ? 'Yes' : 'No' }}</td>
-            </tr>
-            <tr>
-                <th>brand</th>
-                <td>{{ product.brand }}</td>
-            </tr>
-            <tr>
-                <th>disponibilite</th>
-                <td>{% if product.quantity > 0 %}
-                        OUI
-                        {% else %}
-                            NON
-                    {% endif %}</td>
-            </tr>
-            <tr>
-                <th>caracteristic</th>
-                <tr>
-                    {% for caracteristic in caracteristics %}
-                        <th>{{caracteristic.name}}</th>
-                        {% for caracteristicDetail in caracteristic.caracteristicDetail %}
-                            <td>{{ caracteristicDetail.name }} <hr> {{ caracteristicDetail.info }}</td>
-                        {% endfor %}
+    {% include "main/_sub_header.html.twig" %}
+
+        <div>
+            <h1>{{ product.name }}</h1>
+
+            {% if user %}
+            <a href="{{ path('favorite', {'productId' : product.id}) }}" class="js-fav">
+                {% if product.likedByUser(user) %}
+                <i class="fas fa-heart"></i>
+                {% else %}
+                <i class="far fa-heart"></i>
+                {% endif %}
+            </a>
+            {% else %}
+            <a href="{{ path('app_login') }}">
+                <i class="far fa-heart"></i>
+            </a>
+            {% endif %}
+
+            <p>{{ product.brand }}</p>
+            <h3>{{ product.price / 100 }} €</h3>
+            <p>{{ product.description }}</p>
+            <hr>
+            <div>
+                {% for caracteristic in caracteristics %}
+                    <h5>{{caracteristic.name}} : </h5>
+                    {% for caracteristicDetail in caracteristic.caracteristicDetail %}
+                        {% if product in caracteristicDetail.products %}
+                            <p>{{ caracteristicDetail.name }} <br> {{ caracteristicDetail.info }}</p>
+                        {% endif %}
                     {% endfor %}
-
-                </tr>
-            </tr>
-
-            <a class="addToCart" href="{{ path('cart_add', {'slug': product.slug}) }}">Ajouter au panier</a>
-            
-            
-            <tr>
-                {% for review in reviews %}
-                <tr>
-                    <th>{{ review.title }}</th>
-                    <td>{{ review.rate }}</td>
-                    <td>{{ review.content }}</td>
-                    <td>{{ review.user.firstName }}</td>
-                    <td>{{ review.createdAt|date("d/F/Y") }}</td>
-                </tr>
                 {% endfor %}
-            </tr>
-            <tr>
-                {% for randomProduct in randomProducts [:4] %}
-                <td>name</td>
-                <th>{{ randomProduct.name }}</th>
-                {% endfor %}
-            </tr>
-            
-        </tbody>
-    </table>
-    
-    {% if user %}
-    <a href="{{ path('favorite', {'productId' : product.id}) }}" class="js-fav">
-        {% if product.likedByUser(user) %}
-        <i class="fas fa-heart"></i>
-        {% else %}
-        <i class="far fa-heart"></i>
-        {% endif %}
-    </a>
-    {% else %}
-    <a href="{{ path('app_login') }}">
-        <i class="far fa-heart"></i>
-    </a>
-    {% endif %}
-    
-    
-    
-    
+            </div>
+            <h5>
+                {% if product.quantity > 0 %}
+                    OUI
+                {% else %}
+                    NON
+                {% endif %}
+            </h5>
+            <a href="#" class="removeQuantity">-</a><p id="quantity">1</p><a href="#" class="addQuantity">+</a>
+            <button>
+                <a class="addToCart" href="{{ path('cart_add', {'slug': product.slug}) }}">Ajouter au panier</a>
+            </button>
+            <p>{{ product.SKU }}</p>
+        </div>
+        <div>
+            {% for image in product.images %}
+                <img src="{{ image_path }}{{ image.name }}" alt=""> 
+            {% endfor %}
+        </div>
+        <div>
+            <h1>Les Avis</h1>
+            {% for review in reviews %}
+                <h3>{{ review.title }}</h3>
+                <h4>{{ review.rate }}</h4>
+                <p>{{ review.content }}</p>
+                <p> Par {{ review.user.firstName }} le {{ review.createdAt|date("d/F/Y") }}</p>
+                
+            {% endfor %}
+        </div>
+        <div>
+            <h1>Cela peut aussi vous interesser</h1>
+            {% for randomProduct in randomProducts [:4] %}
+            {% if randomProduct != product %}
+            {{ randomProduct.name }}
+            {% endif %}
+            {% endfor %}
+        </div>
+
     {% endblock %}
     
     {% block javascripts %}
