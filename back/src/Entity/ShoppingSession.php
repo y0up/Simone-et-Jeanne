@@ -49,6 +49,11 @@ class ShoppingSession
      */
     private $shipping;
 
+    /**
+     * @ORM\Column(type="float", nullable=true)
+     */
+    private $shippingPrice;
+
     public function __construct()
     {
         $this->cartItems = new ArrayCollection();
@@ -145,6 +150,18 @@ class ShoppingSession
     public function setShipping(?Shipping $shipping): self
     {
         $this->shipping = $shipping;
+
+        return $this;
+    }
+
+    public function getShippingPrice(): ?float
+    {
+        return $this->shippingPrice;
+    }
+
+    public function setShippingPrice(?float $shippingPrice): self
+    {
+        $this->shippingPrice = $shippingPrice;
 
         return $this;
     }

@@ -64,6 +64,7 @@ class CartController extends AbstractController
     {
         $user = $this->getUser();
         $session = $this->requestStack->getSession();
+        
 
         if ($user) {
             $shoppingSession = $shoppingSessionRepository->findOneBy([
@@ -83,6 +84,7 @@ class CartController extends AbstractController
             ]);
         }
 
+        
         if ($shoppingSession == NULL && $user != NULL) {
             $shoppingSession = new ShoppingSession;
             $shoppingSession->setUser($user);
@@ -99,6 +101,31 @@ class CartController extends AbstractController
             $cartItem->setShoppingSession($shoppingSession);
             $cartItem->setProduct($product);
             $cartItem->setQuantity(1);
+        }
+
+        $totalWeight = ($cartItem->getProduct()->getWeight()) * ($cartItem->getQuantity());
+        if ($totalWeight <= 500) {
+            $shoppingSession->setShippingPrice(440);
+        } elseif ($totalWeight <= 1000) {
+            $shoppingSession->setShippingPrice(490);
+        } elseif ($totalWeight <= 2000) {
+            $shoppingSession->setShippingPrice(630);
+        } elseif ($totalWeight <= 3000) {
+            $shoppingSession->setShippingPrice(650);
+        } elseif ($totalWeight <= 4000) {
+            $shoppingSession->setShippingPrice(690);
+        } elseif ($totalWeight <= 5000) {
+            $shoppingSession->setShippingPrice(990);
+        } elseif ($totalWeight <= 7000) {
+            $shoppingSession->setShippingPrice(1190);
+        } elseif ($totalWeight <= 10000) {
+            $shoppingSession->setShippingPrice(1350);
+        } elseif ($totalWeight <= 15000) {
+            $shoppingSession->setShippingPrice(1790);
+        } elseif ($totalWeight <= 20000) {
+            $shoppingSession->setShippingPrice(1990);
+        } elseif ($totalWeight <= 130000) {
+            $shoppingSession->setShippingPrice(2490);
         }
         
         $total = (($product->getPrice())*($cartItem->getQuantity()) + ($shoppingSession->getTotal()) );

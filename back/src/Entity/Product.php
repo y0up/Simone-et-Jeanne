@@ -109,6 +109,11 @@ class Product
      */
     private $quantity;
 
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $weight;
+
     public function __construct()
     {
         $this->reviews = new ArrayCollection();
@@ -472,6 +477,18 @@ class Product
     public function setQuantity(?int $quantity): self
     {
         $this->quantity = $quantity;
+
+        return $this;
+    }
+
+    public function getWeight(): ?int
+    {
+        return $this->weight;
+    }
+
+    public function setWeight(int $weight): self
+    {
+        $this->weight = $weight;
 
         return $this;
     }

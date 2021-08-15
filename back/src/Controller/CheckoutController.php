@@ -33,7 +33,7 @@ class CheckoutController extends AbstractController
     /**
      * @Route("/payment", name="payment")
      */
-    public function index(CategoryRepository $categoryRepository): Response
+    public function index(CategoryRepository $categoryRepository, Request $request): Response
     {
         $categories = $categoryRepository->findAll();
         $user = $this->getUser();
@@ -70,24 +70,38 @@ class CheckoutController extends AbstractController
             ]);
         }
         
-
+        
         Stripe::setApiKey($stripeSK);
-
+        
         foreach ($cartItems as $cartItem) {
             $cartItemImage = $cartItem->getProduct()->getimages()[0]->getName();
             $stripeProduct = Product::create([
                 'name' => $cartItem->getProduct()->getName(),
-                'images' => [$cartItemImage],
+                'images' => ['uploads/product'.$cartItemImage],
             ]);
-
+            
             $stripePrice = Price::create([
                 'product' => $stripeProduct->id,
                 'currency' => $currency,
-                'unit_amount' => ($cartItem->getProduct()->getPrice())*100,
+                'unit_amount' => ($cartItem->getProduct()->getPrice()),
             ]);
-            $lineItems[] = ['price' => $stripePrice->id, 'quantity' => $cartItem->getQuantity(),];
+            $lineItems[] = ['price' => ($stripePrice->id), 'quantity' => $cartItem->getQuantity(),];
         }
 
+        if ($shoppingSession->getShipping()->getTitle() == 'mondialrelay') {
+            $stripeProduct = Product::create([
+                'name' => 'Livraison',
+            ]);
+            $stripePrice = Price::create([
+                'product' => $stripeProduct->id,
+                'currency' => $currency,
+                'unit_amount' => $shoppingSession->getShippingPrice(),
+            ]);
+    
+            $lineItems[] = ['price' => ($stripePrice->id), 'quantity' => 1,];
+    
+        }
+        
         $session = Session::create([
             'payment_method_types' => ['card'],
             'line_items' => $lineItems,
@@ -106,8 +120,10 @@ class CheckoutController extends AbstractController
     public function mondialrealy(ShoppingSessionRepository $shoppingSessionRepository, ShippingRepository $shippingRepository, EntityManagerInterface $manager, Request $request): Response
     {
         $user = $this->getUser();
-        $datas = json_decode($request->getContent());
+
+        $totalWeight = $request->get('totalWeight');
         
+        $datas = json_decode($request->getContent());
         $session = $this->requestStack->getSession();
         $session->set('data', $datas);
         
@@ -200,7 +216,9 @@ class CheckoutController extends AbstractController
         
         $orderDetail = new OrderDetail();
         $orderDetail->setTotal($shoppingSession->getTotal());
-        $orderDetail->setShippingPrice(($shoppingSession->getShipping())->getPrice());
+        if ($shoppingSession->getShipping()->getTitle() == 'mondialrelay') {
+            $orderDetail->setShippingPrice(($shoppingSession->getShipping())->getPrice());
+        }
         $orderDetail->setStatus(0);
         $orderDetail->setCommandNumber(date("Ymd")."00".($shoppingSession->getId()));
         $orderDetail->setUser($user);

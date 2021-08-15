@@ -4,10 +4,8 @@ var quantity = 1;
 
 function addQuantity(event) {
     event.preventDefault();
-
     quantity++;
     document.getElementById("quantity").innerHTML = quantity;
-
 }
 
 function removeQuantity(event) {
@@ -24,7 +22,6 @@ function onClickBtnFav(event) {
     for (let index = 0; index < quantity; index++) {
         axios.post(url);
     }
-    
 }
 
    document.querySelectorAll('a.addToCart').forEach(function(link){

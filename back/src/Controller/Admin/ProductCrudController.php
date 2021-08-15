@@ -27,7 +27,8 @@ class ProductCrudController extends AbstractCrudController
     {
         return [
             TextField::new('name'),
-            TextareaField::new('description'),
+            TextField::new('description'),
+            IntegerField::new('weight'),
             DateField::new('createdAt')->hideOnForm(),
             MoneyField::new('price')->setCurrency('EUR'),
             TextField::new('brand'),
