@@ -1,0 +1,48 @@
+/* =Variables
+-------------------------------- */
+
+/* Colors */
+$black: #000;
+$white: #fff;
+$terracota: #a8483d;
+$beige: #f6f2de;
+$sauge: #bbc4a5;
+
+/* Font size */
+$baseFontSize: 14;
+
+body {
+  background-color: rgb(238, 238, 238);
+  margin: 0;
+}
+
+header.container {
+  height: 200px;
+  width: 100vw;
+  background-color: rgba(165, 42, 42, 0.164);
+  display: flex;
+}
+
+header > div:first-of-type {
+  display: inline-block;
+  background-color: rgba(0, 255, 255, 0.144);
+}
+
+#text {
+  width: 50vw;
+  height: auto;
+  justify-content: center;
+}
+
+#fleur {
+  width: auto;
+  height: auto;
+}
+
+.hidden {
+  display: none;
+}
+
+.visible {
+  display: block;
+}
