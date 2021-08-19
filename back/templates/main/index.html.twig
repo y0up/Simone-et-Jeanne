@@ -2,45 +2,106 @@
 
 {% block title %}Product index{% endblock %}
 
-{% block body %}
-    <h1>Product index</h1>
+{% block nav %}
+<div class="o-nav__index">
+    <div>
+        <h2>Filtres par Catégories<div class="c-underline"></div></h2>
+        <ul>
+            <li>
+                {% for category in categories %}
+                <a href="#">{{category.name}} </a>
+                {% endfor %}
+            </li>
+        </ul>
+    </div>
+    <div>
+        <h2>Filtre par Prix<div class="c-underline"></div></h2>
+    </div>
+    <div>
+        <h2>Filtre par Marques<div class="c-underline"></div></h2>
+        <ul>
+            <li>
+                {% for brand in brands %}
+                <a href="#">{{brand}} </a>
+                {% endfor %}
+            </li>
+        </ul>
+    </div>
+</div>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Image</th>
-                <th>Name</th>
-                <th>Description</th>
-                <th>SKU</th>
-                <th>Price</th>
-                <th>New</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
+{% endblock %}
+
+{% block main %}
+
+<div class="o-index">
+    <div class="o-index__header o-index__item">
+        <h1>
+            {% if  app.request.get('_route') == 'new_product' %}
+            Les Nouveauté
+            {% else %}
+            {{category.name}}
+            {% endif %}
+            <div class="c-underline c-underline--h11"></div>
+            <div class="c-underline c-underline--h12"></div>
+    </h1>
+        <p>
+            {% if  app.request.get('_route') == 'new_product' %}
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Hic, nesciunt veniam. Sint exercitationem iusto saepe minus temporibus. Assumenda, doloribus commodi! Sit odit blanditiis sapiente at eius laborum suscipit minus accusamus.
+            Facere reprehenderit soluta consequatur sint laudantium minima distinctio dicta, ipsum dignissimos sapiente? Velit facilis, deserunt nemo est voluptas ratione ut, incidunt doloremque quas blanditiis, facere sit rerum temporibus quo a!
+            Rem sint quo quisquam, voluptatum nihil voluptates dolore doloremque dolor officia consequuntur sit error sequi officiis corrupti molestias unde ipsa aspernatur hic. Dolore similique earum soluta a praesentium sit eum.
+            {% else %}
+            {{category.description}}
+            {% endif %}</p>
+    </div>
+    
+    <div class="o-index__sorting"></div>
+    <div class="o-index__content o-index__item">
         {% for product in products %}
-        <pre>
-            {{ dump(product.images[0].name) }}
-        </pre>
-            <tr>
-                <td><img src="{{ image_path }}{{ product.images[0].name }}" alt=""></td>
-                <td>{{ product.name }}</td>
-                <td>{{ product.description }}</td>
-                <td>{{ product.SKU }}</td>
-                <td>{{ product.price / 100}} €</td>
-                <td>{{ product.new ? 'Yes' : 'No' }}</td>
-                <td>
-                    <a href="{{ path('product_show', {'slug': product.slug}) }}">show</a>
-                    <a class="addToCart" href="{{ path('cart_add', {'slug': product.slug}) }}">Ajouter au panier</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="10">no records found</td>
-            </tr>  
+        
+            <div class="o-card" >
+
+                    <div class="o-card__caption" style="background-image: url(https://picsum.photos/2000/2000);">
+                        {% if product.new == true %}
+                            <div class="o-card__new c-new">
+                                <p>Nouveauté</p>
+                            </div>
+                            
+                        {% endif %}
+    
+                        <div class= {% if product.new == true %}"o-card__icon--new"{% else %} "o-card__icon" {% endif %}>
+                            {% if user %}
+                            <a href="{{ path('favorite', {'productId' : product.id}) }}" class="js-fav">
+                                {% if product.likedByUser(user) %}
+                                <i class="c-icon fas fa-heart"></i>
+                                {% else %}
+                                <i class="c-icon far fa-heart"></i>
+                                {% endif %}
+                            </a>
+                            {% else %}
+                            <a href="{{ path('app_login') }}">
+                                <i class="c-icon far fa-heart"></i>
+                            </a>
+                            {% endif %}    
+                            <a href="" class="c-icon"><i class="c-icon fab fa-instagram"></i></a>
+                        </div>
+                    </div>
+                    <a href="{{ path('product_show', {'slug': product.slug}) }}">
+                    <div class="o-card__description" >
+                        {% if product.brand %}
+                        <h6>{{ product.brand }}</h6>
+                        {% endif %}
+
+                        <p>{{ product.name }}</p>
+                        <h5>{{ product.price}} €</h5>
+                    </div>
+                </a>
+                    
+                </div>
+
         {% endfor %}
-        </tbody>
-    </table>
+    </div>
+</div>
+    
 
 {% endblock %}
 

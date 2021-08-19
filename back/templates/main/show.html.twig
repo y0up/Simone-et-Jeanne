@@ -2,82 +2,265 @@
 
 {% block title %}{{product.name}}{% endblock %}
 
-{% block body %}
+{% block main %}
 
-    {% include "main/_sub_header.html.twig" %}
+    {# {% include "main/_sub_header.html.twig" %} #}
+<div class="o-product">
+    <div class="o-product__item">
+        <div class="o-product__gallery">
+            <div class="o-product__image">
+              <img class="active" src="{{ image_path }}{{ product.images[0].name }}">
+            </div>
+            <ul class="o-image__list">
+                {% for image in product.images %}
+              <li class="o-image__item"><img src="{{ image_path }}{{ image.name }}"></li>
+              {% endfor %}
+            </ul>
+        </div>
+    </div>
 
-        <div>
-            <h1>{{ product.name }}</h1>
-
-            {% if user %}
-            <a href="{{ path('favorite', {'productId' : product.id}) }}" class="js-fav">
-                {% if product.likedByUser(user) %}
-                <i class="fas fa-heart"></i>
+        <div class="o-product__item">
+            <div class="o-product__title c-titledt">
+                <h1>{{ product.name }}</h1>
+                <div class="o-product__icon">
+                    {% if user %}
+                    <a href="{{ path('favorite', {'productId' : product.id}) }}" class="js-fav">
+                        {% if product.likedByUser(user) %}
+                            <i class="c-icon fas fa-heart"></i>
+                        {% else %}
+                            <i class="c-icon far fa-heart"></i>
+                        {% endif %}
+                    </a>
                 {% else %}
-                <i class="far fa-heart"></i>
-                {% endif %}
-            </a>
-            {% else %}
-            <a href="{{ path('app_login') }}">
-                <i class="far fa-heart"></i>
-            </a>
-            {% endif %}
+                    <a href="{{ path('app_login') }}">
+                        <i class="c-icon far fa-heart"></i>
+                    </a>
+                {% endif %}    
+                <a href="" class="c-icon"><i class="c-icon fab fa-instagram"></i></a>
+                </div>
+                
+            </div>
 
-            <p>{{ product.brand }}</p>
-            <h3>{{ product.price / 100 }} €</h3>
+            <h6>{{ product.brand }}</h6>
+            <h4>{{ product.price / 100 }} €</h4>
             <p>{{ product.description }}</p>
-            <hr>
+            <div class="c-hr"></div>
+            
             <div>
                 {% for caracteristic in caracteristics %}
-                    <h5>{{caracteristic.name}} : </h5>
+                {% if caracteristic.name != 'couleur' and caracteristic.name != 'parfum' %}
+                
+                <p><b> {{caracteristic.name}} : </b>
                     {% for caracteristicDetail in caracteristic.caracteristicDetail %}
-                        {% if product in caracteristicDetail.products %}
-                            <p>{{ caracteristicDetail.name }} <br> {{ caracteristicDetail.info }}</p>
-                        {% endif %}
+                    {% if product in caracteristicDetail.products %}
+                    {{ caracteristicDetail.name }},
+                    {% endif %}
                     {% endfor %}
+                </p>
+                {% endif %}
+                {% endfor %}
+                 
+                <p><b>Poids : </b>{{ product.weight }} kg</p>
+                
+
+
+                <div class="c-hr"></div>
+                
+
+
+                {% for caracteristic in caracteristics %}
+                    {% if caracteristic.name == 'couleur' or caracteristic.name == 'parfum' %}
+                    {% if caracteristic.name == 'couleur' %}
+                    <div class="o-color">
+                        <div class="c-radio">
+                            <input type="radio" name="demo6" class="demo6" id="demo6-a" onclick="colorChoice()" checked>
+                            <label for="demo6-a">Couleur unis</label>
+                        </div>
+                        <div class="c-radio">
+                            <input type="radio" name="demo6" class="demo6" id="demo6-b" onclick="colorChoice()">
+                            <label for="demo6-b">Dégradé <h4> (+2€)</h4></label>
+                        </div>
+                    </div>
+                    
+                    {% else %}
+                    <p>{{caracteristic.name}} : </p>
+                    {% endif %}
+                    {% if caracteristic.name == 'couleur' %}
+                    <div class="o-product__select">
+                        <div class="select-style" id="unis">
+                            <select >
+                                {% for caracteristicDetail in caracteristic.caracteristicDetail %}
+                                {% if product in caracteristicDetail.products %}
+                                <option value="{{caracteristicDetail.name}}">{{caracteristicDetail.name}}</option>
+                                {% endif %}
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="select-style" >
+                            <select id="1" disabled>
+                                {% for caracteristicDetail in caracteristic.caracteristicDetail %}
+                                {% if product in caracteristicDetail.products %}
+                                <option value="{{caracteristicDetail.name}}">{{caracteristicDetail.name}}</option>
+                                {% endif %}
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="select-style">
+                            <select id="2" disabled>
+                                {% for caracteristicDetail in caracteristic.caracteristicDetail %}
+                                {% if product in caracteristicDetail.products %}
+                                <option value="{{caracteristicDetail.name}}">{{caracteristicDetail.name}}</option>
+                                {% endif %}
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    
+                    {% else %}
+                    
+                    <div class="select-style">
+                        <select >
+                            {% for caracteristicDetail in caracteristic.caracteristicDetail %}
+                            {% if product in caracteristicDetail.products %}
+                            <option value="{{caracteristicDetail.name}}">{{caracteristicDetail.name}}</option>
+                            {% endif %}
+                            {% endfor %}
+                        </select>
+                    </div>
+                    {% endif %}
+                    
+                    {% endif %}
                 {% endfor %}
             </div>
+            
+
             <h5>
                 {% if product.quantity > 0 %}
-                    OUI
+                    <h5>Disponible</h5>
                 {% else %}
-                    NON
+                    <h5>Rupture de stock</h5>
                 {% endif %}
             </h5>
-            <a href="#" class="removeQuantity">-</a><p id="quantity">1</p><a href="#" class="addQuantity">+</a>
-            <button>
-                <a class="addToCart" href="{{ path('cart_add', {'slug': product.slug}) }}">Ajouter au panier</a>
-            </button>
+
+            <div class="o-product__actions">
+                <div class="o-product__qty c-qty">
+                    <a href="#" class="removeQuantity">-</a>
+                    <p id="quantity">1</p>
+                    <a href="#" class="addQuantity">+</a>
+                </div>
+    
+                <button class="c-btn" {% if product.quantity > 0 %} disabled {% endif %}>
+                    <a class="addToCart" href="{{ path('cart_add', {'slug': product.slug}) }}">AJOUTER AU PANIER</a>
+                </button>
+            </div>
+            
             <p>{{ product.SKU }}</p>
         </div>
-        <div>
-            {% for image in product.images %}
-                <img src="{{ image_path }}{{ image.name }}" alt=""> 
-            {% endfor %}
-        </div>
-        <div>
-            <h1>Les Avis</h1>
+            
+</div>
+
+<div class="c-hr"></div>
+
+         {# REVIEW #}
+
+        <div class="o-review">
+            <h2>Les Avis<div class="c-underline"></div></h2>
             {% for review in reviews %}
+            <div class="o-review__item" >
                 <h3>{{ review.title }}</h3>
-                <h4>{{ review.rate }}</h4>
+                <div class="o-review__rate">
+                    <i class={% if review.rate >= 1 %}"c-starfull fas fa-star" {% else %}"far fa-star"{% endif %}></i>
+                    <i class={% if review.rate >= 2 %}"c-starfull fas fa-star" {% else %}"far fa-star"{% endif %}"far fa-star"></i>
+                    <i class={% if review.rate >= 3 %}"c-starfull fas fa-star" {% else %}"far fa-star"{% endif %}></i>
+                    <i class={% if review.rate >= 4 %}"c-starfull fas fa-star" {% else %}"far fa-star"{% endif %}></i>
+                    <i class={% if review.rate >= 5 %}"c-starfull fas fa-star" {% else %}"far fa-star"{% endif %}></i>
+                </div>
                 <p>{{ review.content }}</p>
-                <p> Par {{ review.user.firstName }} le {{ review.createdAt|date("d/F/Y") }}</p>
+                <h6> Par {{ review.user.firstName }} le {{ review.createdAt|date("d F Y")|format_datetime('full', 'none', locale='fr') }}</h6>
+            </div>
                 
             {% endfor %}
         </div>
-        <div>
-            <h1>Cela peut aussi vous interesser</h1>
-            {% for randomProduct in randomProducts [:4] %}
-            {% if randomProduct != product %}
-            {{ randomProduct.name }}
-            {% endif %}
-            {% endfor %}
-        </div>
 
-    {% endblock %}
-    
-    {% block javascripts %}
-    {{ parent() }}
-    {{ encore_entry_script_tags('fav') }}
-    {{ encore_entry_script_tags('addToCart') }}
+        <div class="c-hr"></div>
+
+        {# OHER PRODUCTS #}
+
+        <div>
+            <h2>Cela peut aussi vous interesser<div class="c-underline"></div></h2>
+            <div class="o-index__content o-index__item">
+                {% for randomProduct in randomProducts [:4] %}
+                {% if randomProduct != product %}
+                <div class="o-card" >
+                    
+                    <div class="o-card__caption" style="background-image: url(https://picsum.photos/2000/2000);">
+                        {% if randomProduct.new == true %}
+                        <div class="o-card__new c-new">
+                            <p>Nouveauté</p>
+                        </div>
+                        
+                        {% endif %}
+                        
+                        <div class= {% if randomProduct.new == true %}"o-card__icon--new"{% else %} "o-card__icon" {% endif %}>
+                            {% if user %}
+                            <a href="{{ path('favorite', {'productId' : randomProduct.id}) }}" class="js-fav">
+                                {% if product.likedByUser(user) %}
+                                <i class="c-icon fas fa-heart"></i>
+                                {% else %}
+                                <i class="c-icon far fa-heart"></i>
+                                {% endif %}
+                            </a>
+                            {% else %}
+                            <a href="{{ path('app_login') }}">
+                                <i class="c-icon far fa-heart"></i>
+                            </a>
+                            {% endif %}    
+                            <a href="" class="c-icon"><i class="c-icon fab fa-instagram"></i></a>
+                        </div>
+                    </div>
+                    <a href="{{ path('product_show', {'slug': randomProduct.slug}) }}">
+                        <div class="o-card__description" >
+                            {% if randomProduct.brand %}
+                            <h6>{{ randomProduct.brand }}</h6>
+                            {% endif %}
+                            
+                            <p>{{ randomProduct.name }}</p>
+                            <h5>{{ randomProduct.price}} €</h5>
+                        </div>
+                    </a>
+                    
+                </div>
+                {% endif %}
+                {% endfor %}
+            </div>
+            </div>
+            
+            {% endblock %}
+            
+            {% block javascripts %}
+            {{ parent() }}
+            {{ encore_entry_script_tags('fav') }}
+            {{ encore_entry_script_tags('addToCart') }}
+            {{ encore_entry_script_tags('changeImage') }}
+
+    <script>
+        function colorChoice() {
+    // Get the checkbox
+    var checkBox = document.getElementById("demo6-a");
+    var select1 = document.getElementById("1");
+    var select2 = document.getElementById("2");
+  
+    // If the checkbox is checked, display the output text
+    if (checkBox.checked == true){
+        
+        select1.disabled = true;
+        select2.disabled = true;
+      } else {
+        select1.disabled = false;
+        select2.disabled = false;
+    }
+  }
+    </script>
+
+
     {% endblock %}

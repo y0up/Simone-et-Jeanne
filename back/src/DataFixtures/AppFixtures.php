@@ -101,12 +101,13 @@ class AppFixtures extends Fixture
             $product->addCategory($faker->randomElement($categoryList));
             $product->addCaracteristic($faker->randomElement($caracteristicList));
             $product->setNew($faker->boolean($chanceOfGettingTrue = 25));
+            $product->setWeight($faker->numberBetween($min = 0, $max = 5));
             $product->setSlug(strtolower($this->slugger->slug($product->getName())));
             $productList[] = $product;
 
             for ($j=0; $j < 3; $j++) { 
                 $image = new Image();
-                $image->setName($faker->imageUrl($width = 640, $height = 480));
+                $image->setName('https://picsum.photos/200/300');
                 $image->setProduct($product);
                 $manager->persist($image);
             }

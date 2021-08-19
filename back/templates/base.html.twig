@@ -14,10 +14,21 @@
     </head>
     <body>
         {% block header %}
-        {% include "main/_header.html.twig" %}
+            {% include "main/_header.html.twig" %}
         {% endblock %}
-        {% block body %}
 
+        <nav>
+            {% block nav %}{% endblock %}
+        </nav>
+        <main>
+            {% block main %}{% endblock %}
+        </main>
+        <aside>
+            {% block aside %}{% endblock %}
+        </aside>
+        
+        {% block footer %}
+            {% include "main/_footer.html.twig" %}
         {% endblock %}
     </body>
 </html>

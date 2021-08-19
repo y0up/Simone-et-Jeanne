@@ -1,15 +1,55 @@
-<header>
-    <a href="{{ path('home') }}">Acceuil</a>
-    <a href="{{ path('new_product') }}">Nouveaute</a>
-    {% for category in categories %}
-    <a href="{{ path('cat_product', {'slug' : category.slug}) }}">{{category.name}}</a>
-    {% endfor %}
-    <a href="#">A Propos</a>
-    <a href="#">Contact</a>
-    {% if is_granted('ROLE_USER') %}
-    <a href="{{ path('user_info', {'slug' : user.slug}) }}">profile</a>
-    {% else %}
-    <a href="{{ path('app_login') }}">Login</a>
-    {% endif %}
-    <a href="{{ path('cart_index') }}">Panier</a>
+
+<header class="o-header">
+    <div class="o-header__container"></div>
+    <div class="o-header__container">
+        <div class="o-header__logo o-header__item">
+            <img class="c-logo c-logo__text" src="{{ asset('build/logo_text.png') }}" alt="">
+            <img class="c-logo" src="{{ asset('build/Fleur_logo.png') }}" alt="">
+        </div>
+
+        <div class="o-header__nav1 o-header__item">
+            {% if app.request.get('_route') == 'home' %}
+            <a href="{{ path('home') }}" class="current">Acceuil</a>
+            {% else %}
+                <a href="{{ path('home') }}">Acceuil</a>
+            {% endif %}
+            
+            <div class="c-vr"></div>
+            {% if app.request.get('_route') == 'new_product' %}
+            <a href="{{ path('new_product') }}" class="current">Nouveauté</a>
+            {% else %}
+                <a href="{{ path('new_product') }}">Nouveauté</a>
+            {% endif %}
+            
+            {% for category in categories %}
+            <div class="c-vr"></div>
+            <a href="{{ path('cat_product', {'slug' : category.slug}) }}" {% if app.request.attributes.get('_route_params') == {'slug' : category.slug} %}class="current"{% endif %}
+             >{{category.name}} </a>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="o-header__container">
+        <div class="o-header__menu o-header__item">
+            <a href="#" class="c-icon"><i class="fas fa-search"></i></a>
+            <div class="c-vr"></div>
+            <a href="#" class="c-icon"><i class="far fa-heart"></i></a>
+            {% if is_granted('ROLE_USER') %}
+                <a href="{{ path('user_info', {'slug' : user.slug}) }}" class="c-icon"><i class="fas fa-user"></i></a>
+            {% else %}
+                <a href="{{ path('app_login') }}" class="c-icon"><i class="far fa-user"></i></a>
+            {% endif %}
+            <div class="c-vr"></div>
+            <a href="{{ path('cart_index') }}" class="c-icon"><i class="fas fa-shopping-cart"></i></a>
+        </div>
+        <div class="o-header__nav2 o-header__item">
+            {% if app.request.get('_route') == 'about' %}
+            <a href="{{ path('about') }}" class="current">A Propos</a>
+            {% else %}
+            <a href="{{ path('about') }}">A Propos</a>
+            {% endif %}
+            <div class="c-vr"></div>
+            <a href="#">Contact</a>
+        </div>
+    </div>
 </header>

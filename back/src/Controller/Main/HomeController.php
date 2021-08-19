@@ -54,11 +54,22 @@ class HomeController extends AbstractController
     {
         $user = $this->getUser();
         $categories = $categoryRepository->findAll();
+        $products = $category->getProducts();
+
+        $brandUniqueList = [];
+        foreach ($products as $a) {
+            $brands[] = $a->getBrand();
+            if (in_array($brands, $brandUniqueList) == false) {
+                $brandUniqueList[] = $a->getBrand();
+            }
+        }
 
         return $this->render('main/index.html.twig', [
-            'products' => $category->getProducts(),
+            'products' => $products,
             'categories' => $categories,
             'user' => $user,
+            'category' => $category,
+            'brands' => $brandUniqueList,
         ]);
     }
 
@@ -71,7 +82,7 @@ class HomeController extends AbstractController
         $categories = $categoryRepository->findAll();
         $caracteristics = $product->getCaracteristic();
         $reviews = $product->getReviews();
-        $categories = $product->getCategories();
+        $categoriesbc = $product->getCategories();
         $randomProducts = $categories[0]->getProducts();
 
         return $this->render('main/show.html.twig', [
@@ -81,6 +92,7 @@ class HomeController extends AbstractController
             'randomProducts' => $randomProducts,
             'user' => $user,
             'categories' => $categories,
+            'categoriesbc' => $categoriesbc,
         ]);
     }
 
@@ -91,17 +103,29 @@ class HomeController extends AbstractController
     {
         $user = $this->getUser();
         $categories = $categoryRepository->findAll();
+
+        
         $products = $productRepository->findBy(
             ['new' => 'Yes']
         );
+        
+        $brandUniqueList = [];
+        foreach ($products as $a) {
+            $brands[] = $a->getBrand();
+            if (in_array($brands, $brandUniqueList) == false) {
+                $brandUniqueList[] = $a->getBrand();
+            }
+        }
+
         return $this->render('main/index.html.twig', [
             'products' => $products,
             'categories' => $categories,
             'user' => $user,
+            'brands' => $brandUniqueList,
         ]);
     }
 
-        /**
+    /**
      * @Route("/favorite", name="favorite", methods={"GET", "POST"})
      */
     public function Favorite(Request $request, ProductRepository $productRepository, EntityManagerInterface $manager): Response
@@ -127,4 +151,19 @@ class HomeController extends AbstractController
 
     }
 
+    /**
+     * @Route("/About", name="about")
+     */
+    public function About(CategoryRepository $categoryRepository): Response
+    {
+        $user = $this->getUser();
+        $categories = $categoryRepository->findAll();
+
+        return $this->render('main/about.html.twig', [
+            'categories' => $categories,
+            'user' => $user,
+        ]);
+     
+
+    }
 }
