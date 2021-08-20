@@ -17,8 +17,9 @@ $baseFontSize: 14px;
 /* Fonts */
 
 $roboto: 'Roboto', sans-serif;
-$amatic: 'Amatic SC', cursive;
+$amatic: 'typo', cursive;
 $badScript: 'Bad Script', cursive;
+
 
 /* =Functions
 -------------------------------- */
@@ -26,6 +27,10 @@ $badScript: 'Bad Script', cursive;
 @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Amatic+SC&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Amatic+SC&family=Bad+Script&display=swap');
+@font-face {
+    font-family: 'typo';
+    src: url('../fonts/typo/Typo.ttf') format('truetype');
+}
 
 /* =Mixins
 -------------------------------- */
@@ -46,6 +51,7 @@ body {
 header {
     grid-column: 1 / 4;
     background-color: white;
+    z-index: 2;
 }
 
 main {
@@ -714,15 +720,27 @@ box-shadow: 0px 3px 6px #00000029;
     display: flex;
     justify-content: center;
     margin-bottom: 50px;
+    max-height: 60vh;
 
     h1 {
         color: rgb(61, 61, 61);
     }
+
 }
 
 .o-container__item {
-    flex-grow: 1;
+    
     display: flex;
+    overflow: hidden;
+    width: 33vw;
+
+    
+    img {
+        width: 33vw;
+        
+    }
+    
+
 }
 
 .o-item__text {
@@ -743,7 +761,12 @@ box-shadow: 0px 3px 6px #00000029;
 }
 
 .o-jumbotron {
-    z-index: -5;
+    z-index: -10;
+    
+    img {
+        width: 70vw;
+        height: 50vh;
+    }
 }
 
 
