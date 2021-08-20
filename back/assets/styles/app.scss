@@ -17,8 +17,8 @@ $baseFontSize: 14px;
 /* Fonts */
 
 $roboto: 'Roboto', sans-serif;
-$amatic: 'typo', cursive;
-$badScript: 'Bad Script', cursive;
+$amatic: 'Special Elite', cursive;
+$badScript: 'Special Elite', cursive;
 
 
 /* =Functions
@@ -27,10 +27,7 @@ $badScript: 'Bad Script', cursive;
 @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Amatic+SC&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Amatic+SC&family=Bad+Script&display=swap');
-@font-face {
-    font-family: 'typo';
-    src: url('../fonts/typo/Typo.ttf') format('truetype');
-}
+@import url('https://fonts.googleapis.com/css2?family=Special+Elite&display=swap');
 
 /* =Mixins
 -------------------------------- */
@@ -769,6 +766,13 @@ box-shadow: 0px 3px 6px #00000029;
     }
 }
 
+.o-login__item--tmp {
+    position: absolute;
+    top: 50%;
+left: 49%;
+transform: translate(-50%, -49%);
+    z-index: 1000;
+}
 
 /* =Components Style
 -------------------------------- */
