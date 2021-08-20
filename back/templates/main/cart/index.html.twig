@@ -4,34 +4,48 @@
 
 {% block title %}Panier{% endblock %}
 
-{% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
+{% block main %}
 
-<div class="example-wrapper">
+<h1>MON PANIER<div class="c-underline c-underline--h11"></div>
+    <div class="c-underline c-underline--h12"></div></h1>
+
     {% if cartItems %}
-    <ul>
+    <h2>Mes articles<div class="c-underline"></div></h2>
+<div class="o-cart">
         {% for cartItem in cartItems %}
-        <li>
-            <img src="{{ cartItem.product.images[0].name }}" alt="" />
-            <br>
-            {{cartItem.product.name}}
-            <br>
-            {{cartItem.quantity}}
-            <br>
+        <div class="o-cart__item">
+            <div class="o-info__cart">
+                <img src="{{ image_path }}{{ cartItem.product.images[0].name }}" alt="">
+
+                <div> 
+                    <h3>{{cartItem.product.price}} €</h3>
+                    <p>{{cartItem.product.name}}</p>
+                    <p>Quantité : {{ cartItem.quantity }}</p>
+                     </div>
+            </div>
+            
             {{ include('main/cart/_delete_form.html.twig') }}
-        </li>
-        
+        </div>
         {% endfor %}
 
-        <button class="btn"><a href="{{ path('payment') }}">PAIEMENT</a></button>
-    </ul>
+    </div>
+    <div class="c-margin--bot">
+        <h2>Informations de paiement<div class="c-underline"></div></h2>
+        <div class="o-total">
+            <div  class="o-total__item">
+                <h3>Sous-total:</h3>
+            </div>
+            <div class="o-total__item">
+                <h3>{{ shoppingSession.total }} €</h3>
+            </div>
+            
+        </div>
+        <button class="c-btn c-btn--no--margin"><a href="{{ path('payment') }}">Passer la commande</a></button>
+        {# <img src="https://cdn.brandfolder.io/KGT2DTA4/at/rvgw5pc69nhv9wkh7rw8ckv/Powered_by_Stripe_-_blurple.svg" alt=""> #}
+    </div>
     {% else %}
     Votre panier est vide!
     {% endif %}
-</div>
 {% endblock %}
 
 

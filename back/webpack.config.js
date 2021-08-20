@@ -29,6 +29,7 @@ Encore
     .addEntry('fav', './assets/favorite.js')
     .addEntry('shipping', './assets/shipping.js')
     .addEntry('addToCart', './assets/addToCart.js')
+    .addEntry('addInCart', './assets/addInCart.js')
     .addEntry('changeImage', './assets/changeImage.js')
 
     // enables the Symfony UX Stimulus bridge (used in assets/bootstrap.js)

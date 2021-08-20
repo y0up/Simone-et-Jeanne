@@ -1,38 +1,183 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello CartController!{% endblock %}
+{% block title %}Paiement{% endblock %}
 
-{% block body %}
+{% block header %}
+
+<header class="o-header o-header__payment">
+  <div class="o-header__container">
+    <img class="c-logo--payment" src="{{ asset('build/logo-footer.png') }}" alt="">
+  </div>
+  <div class="o-header__container">
+      <div class="o-header__logo o-header__item">
+          <p>PAIEMENT</p>
+      </div>
+  </div>
+  </div>
+</header>
+{% endblock %}
+
+{% block main %}
+
+<div>
+    <div class="o-payment__item">
+      <h2>Information client<div class="c-underline"></div></h2>
+      <label for="inputEmail"><h3>Email</h3></label>
+      <input type="email" name="email" id="inputEmail" class="form-control c-input" autocomplete="email" required >
+    </div>
+    
+    <div class="o-payment__item">
+      <h2>Information livraison<div class="c-underline"></div></h2>
+      <div class="o-payment__choice">
+        <a href="{{ path('mondialrelay') }}" class="shippingChoice c-is--active" id="relayChoice">en point relay</a>
+        <a href="{{ path('workshop') }}" class="shippingChoice c-is--not--active" id="bordeauxChoice">a l'atelier</a>
+      </div>
+      
+     <div id="relay" class="visible c-adress">
+       
+       <div class="o-widget" id="Zone_Widget"></div>
+       {# <input type="text" id="ParcelShopCode"> #}
+       <h3>Votre colis sera livré à l'adresse suivante:</h3>
+       <p id="relayName"></p>
+       <p id="relayAdress1"></p>
+       <p id="relayAdress2"></p>
+       <p id="relayCp"></p>
+       <p id="relayCity"></p>
+       <p id="relayCountry"></p>
+       
+     </div>
+     
+     <div class="hidden" id="bordeaux">
+        <h3>Vous pourrez venir chercher votre colis à l'adresse suivante:</h3>
+        <p>15 rue Descartes</p>
+        <p>33000 BORDEAUX</p>
+        <p>FRANCE</p>
+      </div>
+    </div>
 
 
- <a href="{{ path('mondialrelay') }}" class="shippingChoice" id="relayChoice">en point relay</a>
- <a href="{{ path('workshop') }}" class="shippingChoice" id="bordeauxChoice">a l'atelier</a>
-<div id="relay" class="visible">
-  <h3>En point relais</h3>
-  <div id="Zone_Widget"></div>
-  <input type="text" id="ParcelShopCode">
-  <hr>
-  <h4>Adresse de livraison:</h4>
-  <p id="relayName"></p>
-  <p id="relayAdress1"></p>
-  <p id="relayAdress2"></p>
-  <p id="relayCp"></p>
-  <p id="relayCity"></p>
-  <p id="relayCountry"></p>
+
+
+    
+    <div class="o-payment__item">
+      <h2>Information Facturation<div class="c-underline"></div></h2>
+      <div class="o-form--payment">
+        <div class="o-form__item">
+          <div class="c-input--grow">
+            <label for="firstName"><h3>Prénom</h3></label>
+            <input type="text" id="firstName" class="form-control c-input" required>
+          </div>
+          <div class="c-input--grow">
+            <label for="lastName"><h3>Nom</h3></label>
+            <input type="text" id="lastName" class="form-control c-input" required>
+          </div>
+          
+        </div>
+        <div class="o-form__item">
+          <div class="c-input--grow">
+            <label for="line1"><h3>Adresse</h3></label>
+            <input type="text" id="line1" class="form-control c-input" required>
+          </div>
+        </div>
+        <div class="o-form__item">
+          <div class="c-input--grow">
+            <label for="line2"><h3>Adresse Complémentaire</h3></label>
+            <input type="text" id="line2" class="form-control c-input" required>
+          </div>
+        </div>
+        <div class="o-form__item">
+          <div class="c-input--grow">
+            <label for="postalCode"><h3>Code Postale</h3></label>
+            <input type="text" id="postalCode" class="form-control c-input" required>
+          </div>
+          <div class="c-input--grow">
+            <label for="city"><h3>Ville</h3></label>
+            <input type="text" id="city" class="form-control c-input" required>
+          </div>
+        </div>
+        <div class="o-form__item">
+          <div class="c-input--grow">
+            <label for="country"><h3>Pays</h3></label>
+            <input type="text" id="country" class="form-control c-input" required>
+          </div>
+          <div class="c-input--grow">
+            <label for="telephone"><h3>Numéro de Téléphone</h3></label>
+            <input type="text" id="telephone" class="form-control c-input" required>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+    <div>
+      <div class="o-payment__item">
+        <h2>Récapitulatif de Commande<div class="c-underline"></div></h2>
+        <div>
+          <div class="o-cart">
+            {% for cartItem in cartItems %}
+            <div class="o-cart__item">
+                <div class="o-info__cart">
+                    <img src="{{ image_path }}{{ cartItem.product.images[0].name }}" alt="">
+    
+                    <div> 
+                        <h3>{{cartItem.product.price}} €</h3>
+                        <p>{{cartItem.product.name}}</p>
+                        <p>Quantité : {{ cartItem.quantity }}</p>
+                         </div>
+                </div>
+                
+                {{ include('main/cart/_delete_form.html.twig') }}
+            </div>
+            {% endfor %}
+            
+          </div>
+          <div >
+            {% set dataAdress = app.session %}
+              <div class="c-hr c-hr--large"></div>
+              <div class="o-total">
+                  <div  class="o-total__item">
+                      <h3>Sous-total:</h3>
+                  </div>
+                  <div class="o-total__item">
+                      <h3>{{ shoppingSession.total }} €</h3>
+                  </div>
+                  
+              </div>
+              <form action="{{ path('checkout', {'dataAdress': dataAdress}) }}" >
+                <button class="c-btn" type="submit"><a>PAYER</a></button>
+              </form>
+              
+                {# <img src="https://cdn.brandfolder.io/KGT2DTA4/at/rvgw5pc69nhv9wkh7rw8ckv/Powered_by_Stripe_-_blurple.svg" alt=""> #}
   
-</div>
-
-<div class="hidden" id="bordeaux"><h3>Livraison a domicile presque</h3></div>
-
-{% set dataAdress = app.session %}
-
-
-<form action="{{ path('checkout', {'dataAdress': dataAdress}) }}" >
-    <button type="submit">Checkout</button>
-  </form>
-
+              
+          </div>
+        </div>
+        
+      </div>
+  </div>
   
 
+{% endblock %}
+
+{% block footer %}
+<footer>
+
+  <div class="o-footer__container o-footer__bottom">
+    <div class="o-footer__item">
+        <i class="far fa-copyright"></i>
+        <p> SIMONE & JEANNE</p>
+        <div class="c-vr"></div>
+        <p>2021</p>
+    </div>
+    <div class="o-footer__item">
+        <a href="">Confidentialités et Cookies</a>
+        <div class="c-vr"></div>
+        <a href="">Conditions Générales</a>
+        <div class="c-vr"></div>
+        <a href="">Accessibilité</a>
+    </div>
+  </div>
+</footer>
 {% endblock %}
 
 {% block javascripts %}

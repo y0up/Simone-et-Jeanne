@@ -149,7 +149,7 @@
                     <a href="#" class="addQuantity">+</a>
                 </div>
     
-                <button class="c-btn" {% if product.quantity > 0 %} disabled {% endif %}>
+                <button class="c-btn">
                     <a class="addToCart" href="{{ path('cart_add', {'slug': product.slug}) }}">AJOUTER AU PANIER</a>
                 </button>
             </div>

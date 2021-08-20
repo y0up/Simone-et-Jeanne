@@ -1,10 +1,15 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Edit User{% endblock %}
+{% block title %}Mes Informations{% endblock %}
 
-{% block body %}
+{% block nav %}
 {% include "main/profile/_menu.html.twig" %}
-    <h1>Edit User</h1>
+{% endblock %}
 
+{% block main %}
+    <h1>MON COMPTE<div class="c-underline c-underline--h11"></div>
+        <div class="c-underline c-underline--h12"></div></h1>
+    
     {{ include('main/profile/user/_form.html.twig', {'button_label': 'Update'}) }}
+
 {% endblock %}

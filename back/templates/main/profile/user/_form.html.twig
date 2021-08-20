@@ -1,4 +1,38 @@
-{{ form_start(form) }}
-    {{ form_widget(form) }}
-    <button class="btn">{{ button_label|default('Save') }}</button>
+{{ form_start(form, {'attr': {'class': 'o-form'}}) }}
+
+    <h2>Mes Informations<div class="c-underline"></div></h2>
+    <div class="o-form__item">
+        <div class="c-input--grow">
+            <h3>{{ form_label(form.firstName, 'Prénom') }}</h3>
+            {{ form_widget(form.firstName, {'attr': {'class': 'c-input'}}) }}
+        </div>
+        <div class="c-input--grow">
+            <h3>{{ form_label(form.lastName, 'Nom') }}</h3>
+            {{ form_widget(form.lastName, {'attr': {'class': 'c-input'}}) }}
+        </div>
+        
+    </div>
+    <div class="o-form__item">
+        <div class="c-input--grow">
+            <h3>{{ form_label(form.email, 'Email') }}</h3>
+            {{ form_widget(form.email, {'attr': {'class': 'c-input'}}, disabled = true) }}
+
+        </div>
+    </div>
+    <div class="o-form__item">
+        <div class="c-input--grow">
+            <h3>{{ form_label(form.dateOfBirth, 'Date de Naissance') }}</h3>
+            {{ form_widget(form.dateOfBirth) }}
+
+        </div>
+        <div class="c-input--grow">
+            <h3>{{ form_label(form.phoneNumber, 'Numéro de Téléphone') }}</h3>
+            {{ form_widget(form.phoneNumber, {'attr': {'class': 'c-input'}}) }}
+
+        </div>
+    </div>
+    <div class="o-form__item">
+        <button class="btn c-btn c-btn--small c-btn--no--margin"><a href="">{{ button_label|default('Save') }}</a></button>
+    </div>
+    
 {{ form_end(form) }}

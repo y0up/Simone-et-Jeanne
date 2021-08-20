@@ -2,48 +2,56 @@
 
 {% block title %}User{% endblock %}
 
-{% block body %}
-{% include "main/profile/_menu.html.twig" %}
-    <h1>User</h1>
+{% block nav %}{% include "main/profile/_menu.html.twig" %}{% endblock %}
 
-    <table class="table">
-        <tbody>
+{% block main %}
 
-            <tr>
-                <th>Email</th>
-                <td>{{ user.email }}</td>
-            </tr>
+    <h1>Mon Compte<div class="c-underline c-underline--h11"></div><div class="c-underline c-underline--h12"></div></h1>
 
-            <tr>
-                <th>FirstName</th>
-                <td>{{ user.firstName }}</td>
-            </tr>
-            <tr>
-                <th>LastName</th>
-                <td>{{ user.lastName }}</td>
-            </tr>
-            <tr>
-                <th>PhoneNumber</th>
-                <td>{{ user.phoneNumber }}</td>
-            </tr>
-            <tr>
-                <th>CreatedAt</th>
-                <td>{{ user.createdAt ? user.createdAt|date('Y-m-d H:i:s') : '' }}</td>
-            </tr>
-            <tr>
-                <th>UpdatedAt</th>
-                <td>{{ user.updatedAt ? user.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
-            </tr>
-            <tr>
-                <th>DateOfBirth</th>
-                <td>{{ user.dateOfBirth ? user.dateOfBirth|date('Y-m-d') : '' }}</td>
-            </tr>
-        </tbody>
-    </table>
-
-    <a href="{{ path('change_password', {'slug': user.slug}) }}">Changer le mot de passe</a>
-
-    <a href="{{ path('info_edit', {'slug': user.slug}) }}">edit</a>
-
-    {{ include('main/profile/user/_delete_form.html.twig') }}
-{% endblock %}
+    <div class="o-form">
+        
+        
+        <h2>Mes Informations<div class="c-underline"></div></h2>
+        <div class="o-form__item">
+            <div class="c-input--grow">
+                <h3>Prénom</h3>
+                <input type="text" value="{{ user.firstName }}" class="form-control c-input" disabled>
+            </div>
+            <div class="c-input--grow">
+                <h3>Nom</h3>
+                <input type="text" value="{{ user.lastName }}" class="form-control c-input" disabled>
+            </div>
+            
+        </div>
+        <div class="o-form__item">
+            <div class="c-input--grow">
+                <label for="inputEmail"><h3>Email</h3></label>
+                <input type="email" value="{{ user.email }}" name="email" id="inputEmail" class="form-control c-input" autocomplete="email" disabled>
+                
+            </div>
+        </div>
+        <div class="o-form__item">
+            <div class="c-input--grow">
+                <h3>Date de Naissance</h3>
+                <input type="text" value="{{ user.dateOfBirth|date("d F Y")|format_datetime('full', 'none', locale='fr') }}" class="form-control c-input" disabled>
+                
+            </div>
+            <div class="c-input--grow">
+                <h3>Numéro de Téléphone</h3>
+                <input type="text" value="{{ user.phoneNumber }}" class="form-control c-input" disabled>
+                
+            </div>
+        </div>
+        <div class="o-form__item">
+            <button class="btn c-btn c-btn--small c-btn--no--margin"><a href="{{ path('info_edit', {'slug': user.slug}) }}">Editer mes Informations</a></button>
+            <a href="{{ path('change_password', {'slug': user.slug}) }}">Modifier le Mot de Passe</a>
+            {{ include('main/profile/user/_delete_form.html.twig') }}
+        </div>
+    </div>
+        
+        
+        
+        
+        
+        {% endblock %}
+        

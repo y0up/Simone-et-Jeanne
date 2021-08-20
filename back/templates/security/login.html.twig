@@ -6,42 +6,61 @@
 
 <form method="post">
     {% if error %}
-        <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+    <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
     {% endif %}
 
-    {% if app.user %}
-        <div class="mb-3">
-            You are logged in as {{ app.user.firstName }}, <a href="{{ path('app_logout') }}">Logout</a>
-        </div>
-    {% endif %}
+    <div class="o-login">
 
-    <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
-    <label for="inputEmail">Email</label>
-    <input type="email" value="{{ last_username }}" name="email" id="inputEmail" class="form-control" autocomplete="email" required autofocus>
-    <label for="inputPassword">Password</label>
-    <input type="password" name="password" id="inputPassword" class="form-control" autocomplete="current-password" required>
-
-    <input type="hidden" name="_csrf_token"
-           value="{{ csrf_token('authenticate') }}"
-    >
-
-
-        <!-- Uncomment this section and add a remember_me option below your firewall to activate remember me functionality.
-        See https://symfony.com/doc/current/security/remember_me.html -->
-
-        <div class="checkbox mb-3">
-            <label>
-                <input type="checkbox" name="_remember_me"> Remember me
-            </label>
-        </div>
-
-
-    <button class="btn btn-lg btn-primary" type="submit">
-        Sign in
-    </button>
-    <button class="btn btn-lg btn-primary">
-        <a href="{{ path('app_register') }}">register</a>
         
-    </button>
-</form>
-{% endblock %}
+        <div class="o-login__item">
+            {% if app.user %}
+            <div class="mb-3">
+                You are logged in as {{ app.user.firstName }}, <a href="{{ path('app_logout') }}">Logout</a>
+            </div>
+            {% endif %}
+            
+            <h1 class="h3 mb-3 font-weight-normal">Se connecter<div class="c-underline c-underline--h11"></div>
+                <div class="c-underline c-underline--h12"></div></h1>
+                <p>Si vous avez un compte, connectez-vous avec votre adresse email.</p>
+                <label for="inputEmail"><h3>Email</h3></label>
+                <input type="email" value="{{ last_username }}" name="email" id="inputEmail" class="form-control c-input" autocomplete="email" required autofocus>
+                <label for="inputPassword"><h3>Password</h3></label>
+                <input type="password" name="password" id="inputPassword" class="form-control c-input" autocomplete="current-password" required>
+                
+                <input type="hidden" name="_csrf_token"
+                value="{{ csrf_token('authenticate') }}"
+                >
+                
+                
+                <!-- Uncomment this section and add a remember_me option below your firewall to activate remember me functionality.
+                    See https://symfony.com/doc/current/security/remember_me.html -->
+                <div class="o-login__actions">
+                    <button class="c-btn c-btn--no--margin" type="submit">
+                        <a href="">Connexion</a> 
+                    </button>
+                    <a>Mot de passe oublié ?</a>
+                    <div class="">
+                        <label>
+                            <input type="checkbox" name="_remember_me"> Se rappeler de moi
+                        </label>
+                    </div>
+                    
+                    
+                </div>
+                
+            </div>    
+                    
+                <div class="c-vr c-vr--large"></div>
+                
+                <div class="o-login__item">
+                    <h1 class="h3 mb-3 font-weight-normal">Nouveau Client<div class="c-underline c-underline--h11"></div><div class="c-underline c-underline--h12"></div></h1>
+
+                    <p></p>En créant un compte sur notre boutique, vous pourrez passer vos commandes plus rapidement, enregistrer plusieurs adresses de livraison, consulter et suivre vos commandes, et plein d’autres choses encore.</p>
+                    <button class="c-btn c-btn--no--margin">
+                        <a href="{{ path('app_register') }}">S'inscrire</a>
+                    </button>
+                </div>
+            </div>
+        </form>
+            {% endblock %}
+            

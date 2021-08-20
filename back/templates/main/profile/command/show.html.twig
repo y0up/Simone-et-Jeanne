@@ -2,16 +2,46 @@
 
 {% block title %}OrderDetail{% endblock %}
 
-{% block body %}
+{% block nav %}
 {% include "main/profile/_menu.html.twig" %}
-    <h1>OrderDetail</h1>
+{% endblock %}
 
-    <h2>Commande n°{{ order_detail.commandNumber }}</h2>
+{% block main %}
 
-    <h4>status de la commande: {{ order_detail.status }}</h4>
-    <hr>
+    <h1>MON COMPTE<div class="c-underline c-underline--h11"></div><div class="c-underline c-underline--h12"></div></h1>
+
+    <h2>Commande n°{{ order_detail.commandNumber }}<div class="c-underline"></div></h2>
+
+    {% if order_detail.status =='treated' %}
+    <h3>Commande Traité</h3>
+    {% elseif order_detail.status =='prepared' %}
+    <h3>Commande Préparé</h3>
+    {% elseif order_detail.status =='shipped' %}
+    <h3>Commande Envoyé</h3>
+    {% endif %}
     <h3>Information de livraison:</h3>
-    {{ order_detail.shippingChoice }}
+    {% if order_detail.shippingChoice == 'atelier' %} 
+    <div class="o-shipping">
+        <div class="o-shipping__item">
+            <p>Vous avez décidé de venir chercher votre commande directement à l'atelier à l'adresse suivante:</p>
+            <li>15 rue Descartes</li>
+            <li>33000 BORDEAUX</li>
+            <li>FRANCE</li>
+        </div>
+        <div class="o-shipping__item">
+            <p><b>Veuillez nous indiquer le jour et l'heure à laquelle vous comptez récupérer votre commande (Parmis les horaires d'ouvertures du magasin) :</b> </p>
+            <input placeholder="Entrez votre texte ici" class="c-input" type="textarea">
+            <div class="o-shipping__action">
+                <button  type="submit" class="c-btn"><a href="#">Envoyer</a></button>
+
+            </div>
+        </div>
+</div>
+    
+    {% else %}
+    
+    <p>Vous avez choisit de vous faire livrer en point relais à 
+        l'adresse suivante :</p>
     <br>
     {{ orderAdress.Name }}
     {{ orderAdress.firstName }} {{ orderAdress.lastName }}
@@ -29,15 +59,70 @@
             {{ orderAdress.phoneNumber }}
             <hr>
 
+    {% endif %}
+    
+    <div class="c-hr c-hr--large"></div>
+
+    <div class="o-index__content o-index__item">
         {% for item in orderItems %}
-            {{item.product.name}}
-            {{item.product.price}}
+        
+            <div class="o-card" >
+
+                    <div class="o-card__caption" style="background-image: url(https://picsum.photos/2000/2000);">
+                        {% if item.product.new == true %}
+                            <div class="o-card__new c-new">
+                                <p>Nouveauté</p>
+                            </div>
+                            
+                        {% endif %}
+    
+                        <div class= {% if item.product.new == true %}"o-card__icon--new"{% else %} "o-card__icon" {% endif %}>
+                            {% if user %}
+                            <a href="{{ path('favorite', {'productId' : item.product.id}) }}" class="js-fav">
+                                {% if item.product.likedByUser(user) %}
+                                <i class="c-icon fas fa-heart"></i>
+                                {% else %}
+                                <i class="c-icon far fa-heart"></i>
+                                {% endif %}
+                            </a>
+                            {% else %}
+                            <a href="{{ path('app_login') }}">
+                                <i class="c-icon far fa-heart"></i>
+                            </a>
+                            {% endif %}    
+                            <a href="" class="c-icon"><i class="c-icon fab fa-instagram"></i></a>
+                        </div>
+                    </div>
+                    <a href="{{ path('product_show', {'slug': item.product.slug}) }}">
+                    <div class="o-card__description" >
+                        {% if item.product.brand %}
+                        <h6>{{ item.product.brand }}</h6>
+                        {% endif %}
+
+                        <p>{{ item.product.name }}</p>
+                        <h5>{{ item.product.price}} €</h5>
+                    </div>
+                </a>
+                    
+                </div>
+
         {% endfor %}
-        <hr>
-        <h4>information de paiement: </h4>
-        <p>sous-total: {{order_detail.total}}</p>
-        <p>livraison: {{order_detail.shippingPrice}}</p>
-        <h5>TOTAL: {{order_detail.total + order_detail.shippingPrice}}</h5>
+    </div>
+        <div class="c-hr c-hr--large"></div>
+        <h3>information de paiement</h3>
+        <div class="o-total">
+            <div  class="o-total__item">
+                <p>sous-total:</p>
+                <p>livraison:</p>
+                <h3>TOTAL:</h3>
+            </div>
+            <div class="o-total__item">
+                <p>{{order_detail.total + order_detail.shippingPrice}} €</p>
+                <p>{{order_detail.shippingPrice}} €</p>
+                <h3>{{order_detail.total}} €</h3>
+            </div>
+            
+        </div>
 
 
 {% endblock %}

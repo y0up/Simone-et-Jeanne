@@ -2,6 +2,8 @@
 	// Parameterized the widget
   $(document).ready(function widget () {  
     $("#Zone_Widget").MR_ParcelShopPicker({  
+      
+      
       Target: "#ParcelShopCode",
       Brand: "CC2241ID",
       Country: "FR",
@@ -38,10 +40,13 @@ function onClickShippingChoice(event) {
 
   if (link == 'relayChoice') {
 
-    
+    document.getElementById('relayChoice').className = "c-is--active ";
+    document.getElementById('bordeauxChoice').className = "c-is--not--active ";
     document.getElementById('relay').className = "visible";
     document.getElementById('bordeaux').className = "hidden";
   } else {
+    document.getElementById('bordeauxChoice').className = "c-is--active ";
+    document.getElementById('relayChoice').className = "c-is--not--active ";
     document.getElementById('relay').className = "hidden";
     document.getElementById('bordeaux').className = "visible";
   }

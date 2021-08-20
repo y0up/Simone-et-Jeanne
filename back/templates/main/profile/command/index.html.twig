@@ -2,36 +2,60 @@
 
 {% block title %}OrderDetail index{% endblock %}
 
-{% block body %}
-{% include "main/profile/_menu.html.twig" %}
-    <h1>OrderDetail index</h1>
+{% block nav %}{% include "main/profile/_menu.html.twig" %}{% endblock %}
 
-    <table class="table">
-        <thead>
-            <tr>
+{% block main %}
+    <h1>MON COMPTE<div class="c-underline c-underline--h11"></div><div class="c-underline c-underline--h12"></div></h1>
 
-                <th>CreatedAt</th>
-                <th>UpdatedAt</th>
-                <th>Status</th>
-                <th>CommandNumber</th>
-                <th>Action</th>
-            </tr>
-        </thead>
-        <tbody>
+    <h2>Mes Commandes<div class="c-underline"></div></h2>
+
+    
         {% for order_detail in order_details %}
+
+            <div class="o-command">
+                <div class="o-command__item o-command__status" >
+                    {% if order_detail.status =='treated' %}
+                        <h3>Commande Traité</h3>
+                    {% elseif order_detail.status =='prepared' %}
+                        <h3>Commande Préparé</h3>
+                    {% elseif order_detail.status =='shipped' %}
+                        <h3>Commande Envoyé</h3>
+                    {% endif %}
+                </div>
+                <div class="o-command__item " >
+                    <div class="o-command__image">
+                        {% for orderItem in order_detail.orderItems %}
+                        
+                        <img src="{{ image_path }}{{ orderItem.product.images[0].name }}" alt="">
+                        
+                        {% endfor %}
+                    </div>
+                    <div>
+                        <div class="c-vr c-vr--command"></div>
+                    </div>
+                    <div class="o-command__date">
+                        <p><b>N° de commande: </b> {{ order_detail.commandNumber }}</p>
+                        <p><b>Date de commande: </b> {{order_detail.createdAt|date("d F Y")|format_datetime('full', 'none', locale='fr')}} </p>
+                    </div>
+                </div>
+                <div class="o-command__item" >
+                    <div>
+                        <button class="c-btn"><a href="{{path('command_show', {'slug': user.slug, 'commandNumber': order_detail.commandNumber})}}">Détail de la commande</a></button>
+                    </div>
+                    <div>
+                        <button class="c-btn" {% if order_detail.status !='shipped' %}disabled{% endif %}
+                        ><a href="#" {% if order_detail.status !='shipped' %}disabled{% endif %}>Suivre le colis</a></button>
+                    </div>
+                </div>
+            </div>
+
             <tr>
-                <td>{{ order_detail.createdAt ? order_detail.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td></td>
                 <td>{{ order_detail.updatedAt ? order_detail.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
-                <td>{{ order_detail.status }}</td>
-                <td>{{ order_detail.commandNumber }}</td>
-                <td><a href="{{path('command_show', {'slug': user.slug, 'commandNumber': order_detail.commandNumber})}}">Show</a></td>
             </tr>
         {% else %}
-            <tr>
-                <td colspan="8">no records found</td>
-            </tr>
+            Vous n'avez encore passer aucune commandes sur notre site.
         {% endfor %}
-        </tbody>
-    </table>
+
 
 {% endblock %}

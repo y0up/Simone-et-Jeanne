@@ -1,12 +1,63 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}User Adress{% endblock %}
+{% block nav %}{% include "main/profile/_menu.html.twig" %}{% endblock %}
 
-{% block body %}
-{% include "main/profile/_menu.html.twig" %}
-<h1>Mes favoris</h1>
+{% block main %}
+<h1>MON COMPTE<div class="c-underline c-underline--h11"></div><div class="c-underline c-underline--h12"></div></h1>
+
+<h2>Mes Envies<div class="c-underline"></div></h2>
+
+<div class="o-index__content o-index__item">
+
+    {% if products is empty %}
+        Vous n'avez pas encore ajouter de produits à vos favoris.
+    {% else %}
+
     
     {% for product in products %}
-            <p>{{ product.name }}</p>
+    
+    <div class="o-card" >
+        
+        <div class="o-card__caption" style="background-image: url(https://picsum.photos/2000/2000);">
+            {% if product.new == true %}
+            <div class="o-card__new c-new">
+                <p>Nouveauté</p>
+            </div>
+            
+            {% endif %}
+            
+            <div class= {% if product.new == true %}"o-card__icon--new"{% else %} "o-card__icon" {% endif %}>
+                {% if user %}
+                <a href="{{ path('favorite', {'productId' : product.id}) }}" class="js-fav">
+                    {% if product.likedByUser(user) %}
+                    <i class="c-icon fas fa-heart"></i>
+                    {% else %}
+                    <i class="c-icon far fa-heart"></i>
+                    {% endif %}
+                </a>
+                {% else %}
+                <a href="{{ path('app_login') }}">
+                    <i class="c-icon far fa-heart"></i>
+                </a>
+                {% endif %}    
+                <a href="" class="c-icon"><i class="c-icon fab fa-instagram"></i></a>
+            </div>
+        </div>
+        <a href="{{ path('product_show', {'slug': product.slug}) }}">
+            <div class="o-card__description" >
+                {% if product.brand %}
+                <h6>{{ product.brand }}</h6>
+                {% endif %}
+                
+                <p>{{ product.name }}</p>
+                <h5>{{ product.price}} €</h5>
+            </div>
+        </a>
+        
+    </div>
+    
     {% endfor %}
+</div>
+{% endif %}    
 {% endblock %}

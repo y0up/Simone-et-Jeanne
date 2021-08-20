@@ -33,14 +33,34 @@ class CheckoutController extends AbstractController
     /**
      * @Route("/payment", name="payment")
      */
-    public function index(CategoryRepository $categoryRepository, Request $request): Response
+    public function index(CategoryRepository $categoryRepository, ShoppingSessionRepository $shoppingSessionRepository, CartItemRepository $cartItemRepository): Response
     {
         $categories = $categoryRepository->findAll();
         $user = $this->getUser();
+
+        $user = $this->getUser();
+
+        if ($user) {
+            $shoppingSession = $shoppingSessionRepository->findOneBy([
+                'user' => $user,
+            ]);
+            $cartItems = $cartItemRepository->findBy([
+                'shoppingSession' => $shoppingSession,
+            ]);
+        } else {
+            $shoppingSession = $shoppingSessionRepository->findOneBy([
+                'id' => $this->requestStack->getSession()->get('shoppingSession'),
+            ]);
+            $cartItems = $cartItemRepository->findBy([
+                'shoppingSession' => $shoppingSession,
+            ]);
+        }
         
         return $this->render('main/checkout/payment.html.twig', [
             'controller_name' => 'CheckoutController',
             'categories' => $categories,
+            'cartItems' => $cartItems,
+            'shoppingSession' => $shoppingSession,
             'user' => $user,
         ]);
     }

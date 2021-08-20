@@ -53,6 +53,7 @@ class CartController extends AbstractController
             'controller_name' => 'CartController',
             'cartItems' => $cartItems,
             'categories' => $categories,
+            'shoppingSession' => $shoppingSession,
             'user' => $user,
         ]);
     }

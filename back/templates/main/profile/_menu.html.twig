@@ -1,12 +1,23 @@
     <ul>
-        <li><a href="{{path('command_index', {'slug': user.slug})}}">Commandes</a></li>
-        <li><a href="#">Retours</a></li>
-        <li><a href="{{path('fav', {'slug': user.slug})}}">Envies</a></li>
-        <hr>
-        <li><a href="{{path('user_info', {'slug': user.slug})}}">Informations</a></li>
-        <li><a href="{{path('user_adress', {'slug': user.slug})}}">Adresses</a></li>
-        <li><a href="{{path('user_payment', {'slug': user.slug})}}">Moyens de Paiements</a></li>
-        <li><a href="{{path('user_review', {'slug': user.slug})}}">Avis</a></li>
-        <hr>
+        <div class="o-menu__info">
+            <div class="o-menu__avatar">
+                {{user.firstName|first}}{{user.lastName|first}}
+            </div>
+            <div class="o-menu__name">
+                <div>{{user.firstName}}</div>
+                <div>{{user.lastName}}</div>
+            </div>
+        </div>
+        
+        <div class="c-hr c-hr--large"></div>
+        <li><a href="{{path('command_index', {'slug': user.slug})}}">Mes Commandes</a></li>
+        {# <li><a href="#">Mes Retours</a></li> #}
+        <li><a href="{{path('fav', {'slug': user.slug})}}">Mes Envies</a></li>
+        <div class="c-hr c-hr--large"></div>
+        <li><a href="{{path('user_info', {'slug': user.slug})}}">Mes Informations</a></li>
+        <li><a href="{{path('user_adress', {'slug': user.slug})}}">Mes Adresses</a></li>
+        {# <li><a href="{{path('user_payment', {'slug': user.slug})}}">Mes Moyens de Paiements</a></li> #}
+        <li><a href="{{path('user_review', {'slug': user.slug})}}">Mes Avis</a></li>
+        <div class="c-hr c-hr--large"></div>
         <li><a href="{{path('app_logout', {'slug': user.slug})}}">Déconnexion</a></li>
     </ul>

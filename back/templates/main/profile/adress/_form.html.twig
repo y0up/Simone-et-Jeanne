@@ -1,4 +1,45 @@
-{{ form_start(form) }}
-    {{ form_widget(form) }}
-    <button class="btn">{{ button_label|default('Save') }}</button>
+{{ form_start(form, {'attr': {'class': 'o-form'}}) }}
+<div class="o-form__item">
+    <div class="c-input--grow">
+        <h3>{{ form_label(form.firstName, 'Prénom') }}</h3>
+        {{ form_widget(form.firstName, {'attr': {'class': 'c-input'}}) }}
+    </div>
+    <div class="c-input--grow">
+        <h3>{{ form_label(form.lastName, 'Nom') }}</h3>
+        {{ form_widget(form.lastName, {'attr': {'class': 'c-input'}}) }}
+    </div>
+    
+</div>
+<div class="o-form__item">
+    <div class="c-input--grow">
+        <h3>{{ form_label(form.line1, 'Adresse') }}</h3>
+        {{ form_widget(form.line1, {'attr': {'class': 'c-input'}}, disabled = true) }}
+    </div>
+</div>
+<div class="o-form__item">
+    <div class="c-input--grow">
+        <h3>{{ form_label(form.line2, 'Adresse Complémentaire') }}</h3>
+        {{ form_widget(form.line2, {'attr': {'class': 'c-input'}}, disabled = true) }}
+    </div>
+</div>
+<div class="o-form__item">
+    <div class="c-input--grow">
+        <h3>{{ form_label(form.postalCode, 'Code Postale') }}</h3>
+        {{ form_widget(form.postalCode) }}
+    </div>
+    <div class="c-input--grow">
+        <h3>{{ form_label(form.city, 'Ville') }}</h3>
+        {{ form_widget(form.city, {'attr': {'class': 'c-input'}}) }}
+    </div>
+</div>
+<div class="o-form__item">
+    <div class="c-input--grow">
+        <h3>{{ form_label(form.country, 'Pays') }}</h3>
+        {{ form_widget(form.country) }}
+    </div>
+    <div class="c-input--grow">
+        <h3>{{ form_label(form.telephone, 'Numéro de téléphone') }}</h3>
+        {{ form_widget(form.telephone, {'attr': {'class': 'c-input'}}) }}
+    </div>
+</div>
 {{ form_end(form) }}

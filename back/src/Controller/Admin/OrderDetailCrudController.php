@@ -20,9 +20,9 @@ class OrderDetailCrudController extends AbstractCrudController
     public function configureFields(string $pageName): iterable
     {
         return [
-            IntegerField::new('commandNumber'),
-            IntegerField::new('total'),
-            TextField::new('shippingChoice'),
+            IntegerField::new('commandNumber')->hideOnForm(),
+            IntegerField::new('total')->hideOnForm(),
+            TextField::new('shippingChoice')->hideOnForm(),
             TextField::new('status'),
             DateField::new('createdAt')->hideOnForm(),
             
