@@ -1,0 +1,55 @@
+{
+  "entrypoints": {
+    "app": {
+      "js": [
+        "/build/runtime.db7885a6.js",
+        "/build/238.6e3edb58.js",
+        "/build/698.3b8d7a65.js",
+        "/build/app.f8279710.js"
+      ],
+      "css": [
+        "/build/698.069aa3e8.css",
+        "/build/app.7237d20b.css"
+      ]
+    },
+    "fav": {
+      "js": [
+        "/build/runtime.db7885a6.js",
+        "/build/238.6e3edb58.js",
+        "/build/64.643fa31d.js",
+        "/build/fav.51bc5e54.js"
+      ]
+    },
+    "shipping": {
+      "js": [
+        "/build/runtime.db7885a6.js",
+        "/build/238.6e3edb58.js",
+        "/build/64.643fa31d.js",
+        "/build/shipping.36bdd3f0.js"
+      ]
+    },
+    "addToCart": {
+      "js": [
+        "/build/runtime.db7885a6.js",
+        "/build/238.6e3edb58.js",
+        "/build/64.643fa31d.js",
+        "/build/addToCart.d5921154.js"
+      ]
+    },
+    "addInCart": {
+      "js": [
+        "/build/runtime.db7885a6.js",
+        "/build/238.6e3edb58.js",
+        "/build/64.643fa31d.js",
+        "/build/addInCart.7468e1b0.js"
+      ]
+    },
+    "changeImage": {
+      "js": [
+        "/build/runtime.db7885a6.js",
+        "/build/238.6e3edb58.js",
+        "/build/changeImage.3f80a530.js"
+      ]
+    }
+  }
+}
