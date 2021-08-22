@@ -40,7 +40,7 @@ class Caracteristic
     private $products;
 
     /**
-     * @ORM\OneToMany(targetEntity=CaracteristicDetail::class, mappedBy="caracteristic")
+     * @ORM\OneToMany(targetEntity=CaracteristicDetail::class, mappedBy="caracteristic", orphanRemoval=true)
      */
     private $caracteristicDetail;
 

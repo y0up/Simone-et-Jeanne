@@ -7,6 +7,7 @@ use App\Entity\Product;
 use App\Entity\Category;
 use App\Repository\ProductRepository;
 use App\Repository\CategoryRepository;
+use App\Repository\UserRepository;
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -19,13 +20,17 @@ class HomeController extends AbstractController
     /**
      * @Route("/", name="home")
      */
-    public function home(CategoryRepository $categoryRepository): Response
+    public function home(CategoryRepository $categoryRepository, UserRepository $userRepository): Response
     {
         $categories = $categoryRepository->findAll();
         $user = $this->getUser();
+        $userAdmin = $userRepository->find(1690);
+        $products = $userAdmin->getFavorite();
+        
 
         return $this->render('main/home.html.twig', [
             'controller_name' => 'HomeController',
+            'products' => $products,
             'categories' => $categories,
             'user' => $user,
             
@@ -58,8 +63,8 @@ class HomeController extends AbstractController
 
         $brandUniqueList = [];
         foreach ($products as $a) {
-            $brands[] = $a->getBrand();
-            if (in_array($brands, $brandUniqueList) == false) {
+            $brand = $a->getBrand();
+            if (in_array($brand, $brandUniqueList) == false) {
                 $brandUniqueList[] = $a->getBrand();
             }
         }

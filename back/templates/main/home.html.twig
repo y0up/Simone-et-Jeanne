@@ -31,11 +31,78 @@
         </div>
         
     </div>
-    <div class="o-container">
+    <div class="o-container o-fav">
         <h1>Nos Produits Coup de Coeur</h1>
-    </div>
-    <div class="o-container">
 
+        <div class="o-index__content o-index__item o-fav__images">
+            {% for product in products %}
+            
+                <div class="o-card" >
+    
+                        <div class="o-card__caption" style="background-image: url(..{{ image_path }}{{ product.images[0].name }});">
+                            {% if product.new == true %}
+                                <div class="o-card__new c-new">
+                                    <p>Nouveauté</p>
+                                </div>
+                                
+                            {% endif %}
+        
+                            <div class= {% if product.new == true %}"o-card__icon--new"{% else %} "o-card__icon" {% endif %}>
+                                {% if user %}
+                                <a href="{{ path('favorite', {'productId' : product.id}) }}" class="js-fav">
+                                    {% if product.likedByUser(user) %}
+                                    <i class="c-icon fas fa-heart"></i>
+                                    {% else %}
+                                    <i class="c-icon far fa-heart"></i>
+                                    {% endif %}
+                                </a>
+                                {% else %}
+                                <a href="{{ path('app_login') }}">
+                                    <i class="c-icon far fa-heart"></i>
+                                </a>
+                                {% endif %}    
+                                <a href="" class="c-icon"><i class="c-icon fab fa-instagram"></i></a>
+                            </div>
+                        </div>
+                        <a href="{{ path('product_show', {'slug': product.slug}) }}">
+                        <div class="o-card__description" >
+                            {% if product.brand %}
+                            <h6>{{ product.brand }}</h6>
+                            {% endif %}
+    
+                            <p>{{ product.name }}</p>
+                            <h5>{{ (product.price/100)|replace({'.': ','})}} €</h5>
+                        </div>
+                    </a>
+                        
+                    </div>
+    
+            {% endfor %}
+        </div>
+    </div>
+    <div class="o-container o-bg__home o-pres">
+        <div class="o-container__item">
+            <img src="{{ asset('build/home5.jpeg') }}" alt="">
+        </div>
+        <div class="o-container__item o-fav">
+            <img src="{{ asset('build/simone_et_jeanne_texte.jpg') }}" alt="">
+            <div>
+                <p>Petite, elle multipliait les collections en tous genres, jusqu'à faire de sa chambre un mini musée.
+                     </p>
+                <p>Adolescente elle chinait ses vêtements en vue de trouver la perle rare,
+                     la pièce maîtresse de sa garde robe. Au début de vie d'adulte, elle aménage son appartement avec
+                      du mobilier et de la déco vintage, trouvée chez Emmaüs.<a href="">En savoir plus -></a></p>
+            </div>
+            <div class="o-adre ">
+                <div >
+                    <h1>L'ATELIER</h1>
+                    <p>15 rue Descartes</p>
+                    <p>33000 BORDEAUX</p>
+                    <p>simoneetjeanne@gmail.com</p>
+                </div>
+                <img src="{{ asset('build/Fleur_logo.png') }}" alt="">
+            </div>
+        </div>
     </div>
 {% endblock %}
 

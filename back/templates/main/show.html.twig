@@ -43,17 +43,18 @@
 
             <h6>{{ product.brand }}</h6>
             <h4>{{ product.price / 100 }} €</h4>
-            <p>{{ product.description }}</p>
+            <p>{{ (product.description) }}</p>
             <div class="c-hr"></div>
             
             <div>
                 {% for caracteristic in caracteristics %}
-                {% if caracteristic.name != 'couleur' and caracteristic.name != 'parfum' %}
+                {% if caracteristic.name != 'Couleur' and caracteristic.name != 'Parfum' and caracteristic.name != 'Couleurs' %}
                 
                 <p><b> {{caracteristic.name}} : </b>
                     {% for caracteristicDetail in caracteristic.caracteristicDetail %}
                     {% if product in caracteristicDetail.products %}
-                    {{ caracteristicDetail.name }},
+                    {{ caracteristicDetail.name }}{% if caracteristicDetail != caracteristic.caracteristicDetail|last %},{% endif %}
+                    
                     {% endif %}
                     {% endfor %}
                 </p>
@@ -69,12 +70,12 @@
                 
 
                 {% for caracteristic in caracteristics %}
-                    {% if caracteristic.name == 'couleur' or caracteristic.name == 'parfum' %}
-                    {% if caracteristic.name == 'couleur' %}
+                    {% if caracteristic.name == 'Parfum' or caracteristic.name == 'Couleurs' or caracteristic.name == 'Couleur' %}
+                    {% if caracteristic.name == 'Couleurs' %}
                     <div class="o-color">
                         <div class="c-radio">
                             <input type="radio" name="demo6" class="demo6" id="demo6-a" onclick="colorChoice()" checked>
-                            <label for="demo6-a">Couleur unis</label>
+                            <label for="demo6-a">Couleurs unis</label>
                         </div>
                         <div class="c-radio">
                             <input type="radio" name="demo6" class="demo6" id="demo6-b" onclick="colorChoice()">
@@ -85,7 +86,7 @@
                     {% else %}
                     <p>{{caracteristic.name}} : </p>
                     {% endif %}
-                    {% if caracteristic.name == 'couleur' %}
+                    {% if caracteristic.name == 'Couleurs' %}
                     <div class="o-product__select">
                         <div class="select-style" id="unis">
                             <select >

@@ -1,0 +1,66 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Contact{% endblock %}
+
+{% block main %}
+
+<h1>Contactez-Nous</h1><div class="c-underline c-underline--h11"></div>
+    <div class="c-underline c-underline--h12"></div></h1>
+<div class="o-login">
+    
+    
+    <div class="o-login__item">
+        
+            <h2>Par Mail<div class="c-underline"></div></h2>
+            <div class="contact-form">
+                <div class="form-group">
+                    {{ form_start(form) }}
+                    {{ form_row(form.nom, {'attr': {'class': 'form-control'}}) }}
+                    
+                    
+                </div>
+                <div class="form-group">
+                    {{ form_row(form.email, {'attr': {'class': 'form-control'}}) }}
+                    
+                </div>
+                <div class="form-group">
+                    {{ form_row(form.message, {'attr': {'class': 'form-control'}}) }}
+                    
+                </div>
+                
+                <div class="form-group">
+                    <button type="submit" class="c-btn"><a href="">Envoyer</a></button>
+                </div>
+                {{ form_end(form) }}
+            </div>
+            
+        
+        
+    </div>    
+    
+    <div class="c-vr c-vr--command"></div>
+    
+    <div class="o-login__item">
+        <h2>Par Contact Direct<div class="c-underline"></div></h2>
+        <div>
+            <p><b>Par Mail</b></p>
+            <p>simoneetjeanne@gmail.com</p>
+        </div>
+        <div>
+            <p><b>Directement À L'Atelier</b></p>
+            <p>15 Rue Descartes</p>
+            <p>33000</p>
+            <p>BORDEAUX</p>
+        </div>
+        <div>
+            <p><b>Sur Nos Réseaux</b></p>
+            <div  class="o-menu__info">
+                <a href="" class="c-icon"><i class="fab fa-instagram"></i></a>
+                <a href="" class="c-icon"><i class="fab fa-facebook"></i></a>
+            </div>
+        </div>
+        
+    </div>
+</div>
+
+{% endblock %}

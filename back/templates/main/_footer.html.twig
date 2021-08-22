@@ -6,9 +6,7 @@
         <div class="o-footer__info">
             
             <h2>INFORMATIONS<div class="c-underline c-underline--footer"></div></h2>
-            <a href="">FAQ</a>
-            <a href="">Suivi commande</a>
-            <a href="">Retours et Echanges</a>
+            <a href="{{ path('command_index', {'slug' : user.slug}) }}">Suivi commande</a>
             <a href="">Expeditions et Livraisons</a>
         </div>
         <div class="o-footer__plan">
@@ -31,7 +29,7 @@
 
         </div>
         <div class="o-footer__social o-footer__item">
-            <a href="" class="c-icon"><i class="fab fa-instagram"></i></a>
+            <a href="http://www.instagram.com/simoneetjeanne/" class="c-icon"><i class="fab fa-instagram"></i></a>
             <a href="" class="c-icon"><i class="fab fa-facebook"></i></a>
         </div>
     </div>
